@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete University - Uni-Hub Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 { font-size: 24px; }
+        .navbar a { color: white; text-decoration: none; padding: 8px 16px; }
+        .container { max-width: 600px; margin: 30px auto; padding: 0 20px; }
+        .delete-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+        .delete-card h2 {
+            color: #f44336;
+            margin-bottom: 20px;
+        }
+        .delete-card p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .university-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .university-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Delete University</h1>
+        <a href="{% url 'custom_admin:dashboard' %}">← Back to Dashboard</a>
+    </nav>
+
+    <div class="container">
+        <div class="delete-card">
+            <h2> Confirm Deletion</h2>
+            <p>  delete this university? </p>
+
+            <div class="university-info">
+                <h3>{{ university.name }}</h3>
+                <p><strong>Address:</strong> {{ university.address }}</p>
+                <p><strong>Contact:</strong> {{ university.contact }}</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="{% url 'custom_admin:dashboard' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
