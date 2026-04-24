@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uni-Hub - University Information </title>
+    <title>Admin Login - Uni-Hub</title>
     <style>
         * {
             margin: 0;
@@ -12,187 +12,132 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1b1c1d 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
-        .header {
-            text-align: center;
-            color: white;
-            padding: 30px 0;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        .admin-link {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            background: rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        .admin-link:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        .header h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .header p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .university-card {
+        .login-container {
             background: white;
             border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
         }
-        .university-card:hover {
-            transform: translateY(-5px);
-        }
-        .card-image {
-            width: 50%;
-            min-height: 300px;
-            background-size: cover;
-            background-position: center;
-            background-color: #f0f0f0;
-        }
-        .card-content {
-            width: 50%;
-            padding: 30px;
-        }
-        .card-content h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 28px;
-        }
-        .info-row {
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-        .info-label {
-            font-weight: bold;
-            color: #333;
-            display: inline-block;
-            width: 180px;
-        }
-        .info-value {
-            color: #555;
-        }
-        .ranking-badge {
-            display: inline-block;
-            background: #ffd700;
-            color: #333;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .no-data {
+        .login-header {
             text-align: center;
-            color: white;
-            font-size: 24px;
-            padding: 50px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
+            margin-bottom: 30px;
         }
-        @media (max-width: 768px) {
-            .university-card {
-                flex-direction: column;
-            }
-            .card-image, .card-content {
-                width: 100%;
-            }
-            .info-label {
-                width: 100%;
-                display: block;
-            }
+        .login-header h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+        .messages {
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-home a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-home a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <a href="{% url 'auth:login' %}" class="admin-link"> Admin Login</a>
-        <h1> Uni-Hub</h1>
-        <p> Central University Information Portal</p>
-    </div>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Uni-Hub</h1>
+            <p>Admin Login</p>
+        </div>
 
-    <div class="container">
-        {% if universities %}
-            {% for university in universities %}
-            <div class="university-card">
-                {% if university.image %}
-                <div class="card-image" style="background-image: url('{{ university.image.url }}');"></div>
-                {% endif %}
-                <div class="card-content">
-                    <h2>{{ university.name }}</h2>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Address:</span>
-                        <span class="info-value">{{ university.address }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Contact:</span>
-                        <span class="info-value">{{ university.contact }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Total Departments:</span>
-                        <span class="info-value">{{ university.total_departments }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Faculty Members:</span>
-                        <span class="info-value">{{ university.faculty }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> QS Ranking:</span>
-                        <span class="info-value">
-                            {% if university.qs_ranking %}
-                                <span class="ranking-badge">#{{ university.qs_ranking }}</span>
-                            {% else %}
-                                Not Ranked
-                            {% endif %}
-                        </span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Publications:</span>
-                        <span class="info-value">{{ university.publications }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Cost (Annual):</span>
-                        <span class="info-value">${{ university.cost }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Admission Requirements:</span>
-                        <span class="info-value">{{ university.admission_requirements }}</span>
-                    </div>
-                </div>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
             </div>
             {% endfor %}
-        {% else %}
-            <div class="no-data">
-                <p>No universities found. </p>
-            </div>
+        </div>
         {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+
     </div>
 </body>
 </html>
