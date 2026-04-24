@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uni-Hub - University Information </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1b1c1d 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .admin-link {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .admin-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .university-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+        .university-card:hover {
+            transform: translateY(-5px);
+        }
+        .card-image {
+            width: 50%;
+            min-height: 300px;
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f0f0;
+        }
+        .card-content {
+            width: 50%;
+            padding: 30px;
+        }
+        .card-content h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        .info-row {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #333;
+            display: inline-block;
+            width: 180px;
+        }
+        .info-value {
+            color: #555;
+        }
+        .ranking-badge {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .no-data {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            padding: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+        @media (max-width: 768px) {
+            .university-card {
+                flex-direction: column;
+            }
+            .card-image, .card-content {
+                width: 100%;
+            }
+            .info-label {
+                width: 100%;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'auth:login' %}" class="admin-link"> Admin Login</a>
+        <h1> Uni-Hub</h1>
+        <p> Central University Information Portal</p>
+    </div>
+
+    <div class="container">
+        {% if universities %}
+            {% for university in universities %}
+            <div class="university-card">
+                {% if university.image %}
+                <div class="card-image" style="background-image: url('{{ university.image.url }}');"></div>
+                {% endif %}
+                <div class="card-content">
+                    <h2>{{ university.name }}</h2>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Address:</span>
+                        <span class="info-value">{{ university.address }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Contact:</span>
+                        <span class="info-value">{{ university.contact }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Total Departments:</span>
+                        <span class="info-value">{{ university.total_departments }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Faculty Members:</span>
+                        <span class="info-value">{{ university.faculty }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> QS Ranking:</span>
+                        <span class="info-value">
+                            {% if university.qs_ranking %}
+                                <span class="ranking-badge">#{{ university.qs_ranking }}</span>
+                            {% else %}
+                                Not Ranked
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Publications:</span>
+                        <span class="info-value">{{ university.publications }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Cost (Annual):</span>
+                        <span class="info-value">${{ university.cost }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label"> Admission Requirements:</span>
+                        <span class="info-value">{{ university.admission_requirements }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-data">
+                <p>No universities found. </p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
