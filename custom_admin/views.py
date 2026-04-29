@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from universities.models import University
 from .forms import UniversityForm
+from django.contrib.auth.models import User
 
 def is_staff_user(user):
     return user.is_staff or user.is_superuser
@@ -73,3 +74,17 @@ def delete_university(request, pk):
     
     context = {'university': university}
     return render(request, 'delete_university.html', context)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def manage_users(request):
+    """View to list all non-admin users"""
+    # Grab all users where is_staff is False
+    students = User.objects.filter(is_staff=False).order_by('-date_joined')
+
+    context = {
+        'students': students,
+        'total_students': students.count()
+    }
+    return render(request, 'manage_users.html', context)
