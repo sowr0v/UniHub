@@ -2,35 +2,42 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+
 
 def login_view(request):
-    """User login"""
+    # If already logged in, redirect them based on their status
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
             return redirect('custom_admin:dashboard')
-        return redirect('home')
-    
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            if user.is_staff or user.is_superuser:
-                login(request, user)
-                messages.success(request, f'Welcome back, {user.username}!')
-                return redirect('custom_admin:dashboard')
-            else:
-                messages.error(request, 'You do not have admin privileges.')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    
-    return render(request, 'login.html')
+        return redirect('home')  # Assuming your main student page is named 'home'
 
-@login_required
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Welcome back, {username}!")
+
+                # Check where to route them
+                if user.is_staff or user.is_superuser:
+                    return redirect('custom_admin:dashboard')
+                else:
+                    return redirect('home')
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'login.html', {'form': form})
+
+
 def logout_view(request):
-    """User logout"""
     logout(request)
-    messages.success(request, 'You have been logged out successfully.')
-    return redirect('auth:login')
+    messages.info(request, "You have been safely logged out.")
+    # Change 'home' to 'authentication:login'
+    return redirect('authentication:login')
