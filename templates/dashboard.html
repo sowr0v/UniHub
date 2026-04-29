@@ -216,7 +216,7 @@
                 <tbody>
                     {% for university in universities %}
                     <tr>
-                        <td>{{ university.name }}</td>
+                        <td><strong>{{ university.name }}</strong></td>
                         <td>{{ university.address|truncatewords:5 }}</td>
                         <td>{{ university.contact }}</td>
                         <td>{{ university.total_departments }}</td>

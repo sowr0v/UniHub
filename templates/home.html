@@ -3,245 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uni-Hub - University Information Portal</title>
+    <title>Uni-Hub | Central Portal</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
+        /* STRICTLY PURE CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8f9fa; color: #333; }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #5a64d8;
+            padding: 1rem 2rem;
             color: white;
-            padding: 30px 0;
-            margin-bottom: 30px;
-            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .admin-link {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            background: rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        .admin-link:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        .header h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .header p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
+        .top-nav-controls { display: flex; align-items: center; gap: 15px; }
+        .nav-btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; border: none; transition: opacity 0.2s; }
+        .nav-btn:hover { opacity: 0.8; }
+        .btn-outline { background: transparent; color: white; border: 2px solid white; }
+        .btn-solid { background: white; color: #5a64d8; }
+        .btn-danger { background: #e53935; color: white; }
+        .user-greeting { color: white; font-weight: 500; font-size: 0.95rem; text-decoration: underline; cursor: pointer; }
+
+        /* --- Page Layout --- */
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-        }
-        .university-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 2rem auto;
+            padding: 0 1rem;
             display: flex;
-            transition: transform 0.3s ease;
+            gap: 2rem;
+            align-items: flex-start;
         }
-        .university-card:hover {
-            transform: translateY(-5px);
+
+        /* --- Filter Sidebar --- */
+        .filter-sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            width: 300px;
+            flex-shrink: 0;
         }
-        .card-image {
-            width: 50%;
-            min-height: 300px;
-            background-size: cover;
-            background-position: center;
-            background-color: #f0f0f0;
+        .filter-sidebar h3 { color: #4a54c4; margin-bottom: 1rem; font-size: 1.2rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #555; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+        .btn-filter { width: 100%; padding: 10px; background: #5a64d8; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+        .btn-filter:hover { background: #4a54c4; }
+
+        /* --- University List Area --- */
+        .results-area { flex-grow: 1; }
+
+        /* --- Clean Card Design (From your screenshot) --- */
+        .uni-card {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1rem;
         }
-        .card-content {
-            width: 50%;
-            padding: 30px;
-        }
-        .card-content h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 28px;
-        }
-        .info-row {
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-        .info-label {
+        .uni-title {
+            color: #1a56db;
+            font-size: 1.4rem;
             font-weight: bold;
-            color: #333;
-            display: inline-block;
-            width: 180px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 1.5rem;
         }
-        .info-value {
-            color: #555;
+        .uni-title:hover { text-decoration: underline; }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 1.5rem;
         }
-        .ranking-badge {
-            display: inline-block;
-            background: #ffd700;
-            color: #333;
-            padding: 5px 15px;
-            border-radius: 20px;
+
+        .detail-item { display: flex; flex-direction: column; }
+        .detail-label { font-weight: bold; color: #333; margin-bottom: 0.2rem; }
+        .detail-value { color: #555; font-size: 0.95rem; }
+
+        .badge-ranking {
+            background-color: #fde047;
+            color: #854d0e;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-weight: bold;
-            margin-left: 10px;
-        }
-        .no-data {
-            text-align: center;
-            color: white;
-            font-size: 24px;
-            padding: 50px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-        }
-        @media (max-width: 768px) {
-            .university-card {
-                flex-direction: column;
-            }
-            .card-image, .card-content {
-                width: 100%;
-            }
-            .info-label {
-                width: 100%;
-                display: block;
-            }
+            font-size: 0.85rem;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-<style>
-    .top-nav-controls {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        display: flex;
-        align-items: center;
-        gap: 15px; /* This adds a neat space between buttons so they don't overlap */
-    }
-    .nav-btn {
-        padding: 8px 16px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 0.9rem;
-        cursor: pointer;
-        border: none;
-        transition: opacity 0.2s;
-    }
-    .nav-btn:hover { opacity: 0.8; }
 
-    .btn-outline { background: transparent; color: white; border: 2px solid white; }
-    .btn-solid { background: white; color: #5a64d8; }
-    .btn-danger { background: #ff4d4d; color: white; }
-    .user-greeting { color: white; font-weight: 500; font-size: 0.95rem; }
-</style>
+    <nav class="navbar">
+        <h1>Uni-Hub</h1>
+        <div class="top-nav-controls">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'authentication:profile' %}" class="user-greeting">Hi, {{ request.user.username }}!</a>
 
+                {% if request.user.is_staff %}
+                    <a href="{% url 'custom_admin:dashboard' %}" class="nav-btn btn-solid">Dashboard</a>
+                {% endif %}
 
-<div class="top-nav-controls">
-    {% if request.user.is_authenticated %}
-
-        <a href="{% url 'authentication:profile' %}" class="user-greeting" style="text-decoration: underline; cursor: pointer;">Hi, {{ request.user.username }}!</a>
-
-        {% if request.user.is_staff %}
-            <a href="{% url 'custom_admin:dashboard' %}" class="nav-btn btn-solid">Dashboard</a>
-        {% endif %}
-
-        <form action="{% url 'authentication:logout' %}" method="POST" style="margin: 0; display: flex;">
-            {% csrf_token %}
-            <button type="submit" class="nav-btn btn-danger">Logout</button>
-        </form>
-
-    {% else %}
-
-        <a href="{% url 'authentication:login' %}" class="nav-btn btn-outline">Login</a>
-        <a href="{% url 'authentication:register' %}" class="nav-btn btn-solid">Sign Up</a>
-
-    {% endif %}
-</div>
-        <h1> Uni-Hub</h1>
-        <p> Central University Information Portal</p>
-    </div>
+                <form action="{% url 'authentication:logout' %}" method="POST" style="margin: 0; display: flex;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-btn btn-danger">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'authentication:login' %}" class="nav-btn btn-outline">Login</a>
+                <a href="{% url 'authentication:register' %}" class="nav-btn btn-solid">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
 
     <div class="container">
-        {% if universities %}
-            {% for university in universities %}
-            <div class="university-card">
-                {% if university.image %}
-                <div class="card-image" style="background-image: url('{{ university.image.url }}');"></div>
-                {% else %}
-                <div class="card-image" style="background: linear-gradient(135deg, #7b83eb, #5a64d8);"></div>
-                {% endif %}
-                <div class="card-content">
-                    <h2>{{ university.name }}</h2>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Address:</span>
-                        <span class="info-value">{{ university.address }}</span>
+
+        <form method="GET" action="{% url 'home' %}">
+
+    <div class="form-group">
+        <label>Location</label>
+        <input type="text" name="location" placeholder="e.g. Dhaka" value="{{ request.GET.location }}">
+    </div>
+
+    <div class="form-group">
+        <label>Degree Level</label>
+        <select name="course_type">
+            <option value="">-- All Levels --</option>
+            <option value="Bachelor" {% if request.GET.course_type == 'Bachelor' %}selected{% endif %}>Bachelor's Degree</option>
+            <option value="Master" {% if request.GET.course_type == 'Master' %}selected{% endif %}>Master's Degree</option>
+            <option value="PhD" {% if request.GET.course_type == 'PhD' %}selected{% endif %}>PhD / Doctorate</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Institution Type</label>
+        <select name="institution_type">
+            <option value="">-- All Types --</option>
+            <option value="University" {% if request.GET.institution_type == 'University' %}selected{% endif %}>University</option>
+            <option value="Applied" {% if request.GET.institution_type == 'Applied' %}selected{% endif %}>Applied Sciences</option>
+            <option value="College" {% if request.GET.institution_type == 'College' %}selected{% endif %}>College</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Subject Group</label>
+        <select name="subject_group">
+            <option value="">-- All Subjects --</option>
+            <option value="Engineering" {% if request.GET.subject_group == 'Engineering' %}selected{% endif %}>Engineering & Tech</option>
+            <option value="Business" {% if request.GET.subject_group == 'Business' %}selected{% endif %}>Business & Management</option>
+            <option value="Science" {% if request.GET.subject_group == 'Science' %}selected{% endif %}>Natural Sciences</option>
+            <option value="Arts" {% if request.GET.subject_group == 'Arts' %}selected{% endif %}>Arts & Humanities</option>
+            <option value="Medical" {% if request.GET.subject_group == 'Medical' %}selected{% endif %}>Medicine & Health</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Language</label>
+        <select name="language">
+            <option value="">-- Any Language --</option>
+            <option value="English" {% if request.GET.language == 'English' %}selected{% endif %}>English</option>
+            <option value="Bengali" {% if request.GET.language == 'Bengali' %}selected{% endif %}>Bengali</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Max Tuition Fee ($)</label>
+        <input type="number" name="max_fee" placeholder="e.g. 5000" value="{{ request.GET.max_fee }}">
+    </div>
+
+    <div class="form-group">
+        <label>Sort By</label>
+        <select name="sort">
+            <option value="">-- Best Match --</option>
+            <option value="ranking" {% if request.GET.sort == 'ranking' %}selected{% endif %}>Highest Ranking</option>
+            <option value="fee_low" {% if request.GET.sort == 'fee_low' %}selected{% endif %}>Tuition: Low to High</option>
+            <option value="fee_high" {% if request.GET.sort == 'fee_high' %}selected{% endif %}>Tuition: High to Low</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn-filter">Search & Sort</button>
+
+    {% if request.GET %}
+        <a href="{% url 'home' %}" style="display:block; text-align:center; margin-top:10px; color:#666; text-decoration:none; font-size:0.9rem;">Clear Filters</a>
+    {% endif %}
+</form>
+
+        <div class="results-area">
+
+            {% for uni in universities %}
+            <div class="uni-card">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+    <a href="{% url 'university_detail' uni.id %}" class="uni-title" style="margin-bottom: 0;">{{ uni.name }}</a>
+
+    {% if uni.google_maps_link %}
+        <a href="{{ uni.google_maps_link }}" target="_blank" title="View on Google Maps" style="display: flex; align-items: center; padding: 5px; background: #fce8e6; border-radius: 50%; transition: transform 0.2s;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+        </a>
+    {% endif %}
+</div>
+
+                <div class="details-grid">
+
+                    <div class="detail-item">
+                        <span class="detail-label">QS Ranking</span>
+                        <span class="detail-value">
+                            <span class="badge-ranking">#{{ uni.ranking }}</span>
+                        </span>
                     </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Contact:</span>
-                        <span class="info-value">{{ university.contact }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Total Departments:</span>
-                        <span class="info-value">{{ university.total_departments }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Faculty Members:</span>
-                        <span class="info-value">{{ university.faculty }}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> QS Ranking:</span>
-                        <span class="info-value">
-                            {% if university.qs_ranking %}
-                                <span class="ranking-badge">#{{ university.qs_ranking }}</span>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Tuition fees per semester</span>
+                        <span class="detail-value">
+                            {% if uni.tuition_fee == 0 %}
+                                none
                             {% else %}
-                                Not Ranked
+                                ${{ uni.tuition_fee }}
                             {% endif %}
                         </span>
                     </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Publications:</span>
-                        <span class="info-value">{{ university.publications }}</span>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Total Departments</span>
+                        <span class="detail-value">31</span>
                     </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Cost (Annual):</span>
-                        <span class="info-value">${{ university.cost }}</span>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Language</span>
+                        <span class="detail-value">English</span>
                     </div>
-                    
-                    <div class="info-row">
-                        <span class="info-label"> Admission Requirements:</span>
-                        <span class="info-value">{{ university.admission_requirements }}</span>
-                    </div>
+
                 </div>
             </div>
-            {% endfor %}
-        {% else %}
-            <div class="no-data">
-                <p>No universities found. </p>
+            {% empty %}
+            <div style="background: white; padding: 2rem; text-align: center; border-radius: 8px;">
+                <h3 style="color: #666;">No universities match your search criteria.</h3>
+                <p>Try clearing your filters or searching for a different location.</p>
             </div>
-        {% endif %}
+            {% endfor %}
+
+        </div>
     </div>
+
 </body>
 </html>

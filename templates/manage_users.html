@@ -5,6 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Students - Uni-Hub</title>
     <style>
+        /* PURE CSS WARNING MODAL */
+.modal-toggle { display: none; } /* Hides the checkbox */
+
+.modal-backdrop {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* The Magic: When checkbox is checked, show the modal */
+.modal-toggle:checked ~ .modal-backdrop { display: flex; }
+
+.modal-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-box h3 { color: #e53935; margin-bottom: 1rem; font-size: 1.5rem; }
+.modal-box p { color: #555; margin-bottom: 2rem; line-height: 1.5; }
+
+.modal-actions { display: flex; justify-content: center; gap: 1rem; }
+
+.btn-cancel {
+    background: #e0e0e0; color: #333; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;
+}
+.btn-cancel:hover { background: #d0d0d0; }
+
+.btn-confirm {
+    background: #e53935; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem;
+}
+.btn-confirm:hover { background: #c62828; }
+
+/* The button sitting in the table */
+.btn-trigger {
+    background: #e53935; color: white; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; display: inline-block; font-size: 0.8rem; border: none;
+}
+.btn-trigger:hover { background: #c62828; }
         /* STRICTLY CSS ONLY - NO EXTERNAL FILES */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f7f6; color: #333; }
@@ -179,11 +225,26 @@
                         </td>
                         <td><span class="status-badge">Active Student</span></td>
                         <td>
-                            <form method="POST" action="#" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn-delete">Remove</button>
-                            </form>
-                        </td>
+    <label for="delete-modal-{{ student.id }}" class="btn-trigger">Remove</label>
+
+    <input type="checkbox" id="delete-modal-{{ student.id }}" class="modal-toggle">
+
+    <div class="modal-backdrop">
+        <div class="modal-box">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to permanently remove the student <strong>{{ student.username }}</strong>? This action cannot be undone.</p>
+
+            <div class="modal-actions">
+                <label for="delete-modal-{{ student.id }}" class="btn-cancel">Cancel</label>
+
+                <form method="POST" action="{% url 'custom_admin:delete_student' student.id %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-confirm">Yes, Remove User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</td>
                     </tr>
                     {% empty %}
                     <tr>

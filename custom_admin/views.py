@@ -5,6 +5,7 @@ from universities.models import University
 from .forms import UniversityForm
 from django.contrib.auth.models import User
 
+
 def is_staff_user(user):
     return user.is_staff or user.is_superuser
 
@@ -88,3 +89,17 @@ def manage_users(request):
         'total_students': students.count()
     }
     return render(request, 'manage_users.html', context)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def delete_student(request, user_id):
+    """Securely deletes a student account"""
+    if request.method == 'POST':
+        # Ensure we only delete non-staff users
+        student = get_object_or_404(User, id=user_id, is_staff=False)
+        username = student.username
+        student.delete()
+        messages.success(request, f"Student '{username}' has been permanently removed.")
+
+    return redirect('custom_admin:manage_users')
