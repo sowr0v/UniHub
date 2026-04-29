@@ -44,7 +44,7 @@ def logout_view(request):
     logout(request)
     messages.info(request, "You have been safely logged out.")
     # Change 'home' to 'authentication:login'
-    return redirect('authentication:login')
+    return redirect('home')
 
 
 def register_view(request):

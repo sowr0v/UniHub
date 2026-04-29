@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ university.name }} - Uni-Hub</title>
+    <style>
+        /* STRICTLY PURE CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; background-color: #5a64d8; padding: 1rem 2rem; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .navbar a { color: white; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+
+        .container { max-width: 900px; margin: 3rem auto; padding: 0 1rem; }
+
+        .profile-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        .header-section { border-bottom: 2px solid #f0f0f0; padding-bottom: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-start; }
+        .header-section h1 { color: #1a56db; font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .header-section p { color: #666; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+
+        .badge-ranking { background-color: #fde047; color: #854d0e; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 1rem; display: inline-block; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        .info-block h3 { color: #5a64d8; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .info-block p { font-size: 1.1rem; color: #444; }
+
+        .full-width-block { margin-top: 2rem; background: #f4f7f6; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #5a64d8; }
+        .full-width-block h3 { color: #333; margin-bottom: 0.5rem; }
+
+        .btn-back { display: inline-block; margin-bottom: 1.5rem; color: #5a64d8; text-decoration: none; font-weight: bold; }
+        .btn-back:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{% url 'home' %}">Uni-Hub</a>
+    </nav>
+
+    <div class="container">
+        <a href="{% url 'home' %}" class="btn-back">&larr; Back to Results</a>
+
+        <div class="profile-card">
+
+            <div class="header-section">
+                <div>
+                    <h1>{{ university.name }}</h1>
+                    <p>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        {{ university.address }}
+                    </p>
+                </div>
+                <div>
+                    {% if university.qs_ranking %}
+                        <span class="badge-ranking">QS Ranking: #{{ university.qs_ranking }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-block">
+                    <h3>Contact Information</h3>
+                    <p>{{ university.contact }}</p>
+                </div>
+
+                <div class="info-block">
+                    <h3>Annual Cost</h3>
+                    <p>${{ university.cost }} USD</p>
+                </div>
+
+                <div class="info-block">
+                    <h3>Academic Size</h3>
+                    <p>{{ university.total_departments }} Departments</p>
+                </div>
+
+                <div class="info-block">
+                    <h3>Faculty & Research</h3>
+                    <p>{{ university.faculty }} Faculty Members<br>{{ university.publications }} Publications</p>
+                </div>
+            </div>
+
+            {% if university.admission_requirements %}
+            <div class="full-width-block">
+                <h3>Admission Requirements</h3>
+                <p style="white-space: pre-line;">{{ university.admission_requirements }}</p>
+            </div>
+            {% endif %}
+
+            {% if university.google_maps_link %}
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="{{ university.google_maps_link }}" target="_blank" style="display: inline-block; background: #ea4335; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                    Open in Google Maps
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</body>
+</html>

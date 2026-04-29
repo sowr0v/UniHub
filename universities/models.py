@@ -13,6 +13,7 @@ class University(models.Model):
     image = models.ImageField(upload_to='universities/', blank=True, null=True, help_text="Upload university image")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    google_maps_link = models.URLField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.name

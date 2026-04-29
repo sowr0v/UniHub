@@ -16,7 +16,8 @@ class UniversityForm(forms.ModelForm):
             'qs_ranking',
             'publications',
             'cost',
-            'admission_requirements'
+            'admission_requirements',
+            'google_maps_link'
         ]
         
     
@@ -31,6 +32,7 @@ class UniversityForm(forms.ModelForm):
             'publications': 'Research Publications',
             'cost': 'Annual Cost (USD)',
             'admission_requirements': 'Admission Requirements',
+            'google_maps_link': 'Google Maps Navigation Link',
         }
         
         
@@ -91,6 +93,10 @@ class UniversityForm(forms.ModelForm):
                 'class': 'form-control',
                 'rows': 4,
                 'placeholder': 'e.g., SAT: 1470-1570, GPA: 3.9+, Strong extracurriculars'
+            }),
+            'google_maps_link': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., https://maps.app.goo.gl/...'
             }),
         }
     
