@@ -160,7 +160,12 @@
         <div class="navbar-right">
             <span>Welcome, {{ user.username }}</span>
             <a href="{% url 'home' %}">View Site</a>
-            <a href="{% url 'auth:logout' %}">Logout</a>
+           <form action="{% url 'authentication:logout' %}" method="POST" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit" style="background: none; border: none; color: inherit; font: inherit; cursor: pointer; text-decoration: underline;">
+        Logout
+    </button>
+</form>
         </div>
     </nav>
 

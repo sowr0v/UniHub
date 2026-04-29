@@ -125,7 +125,7 @@
 </head>
 <body>
     <div class="header">
-        <a href="{% url 'auth:login' %}" class="admin-link"> Admin Login</a>
+        <a href="{% url 'authentication:login' %}" class="admin-link"> Admin Login</a>
         <h1> Uni-Hub</h1>
         <p> Central University Information Portal</p>
     </div>
@@ -136,6 +136,8 @@
             <div class="university-card">
                 {% if university.image %}
                 <div class="card-image" style="background-image: url('{{ university.image.url }}');"></div>
+                {% else %}
+                <div class="card-image" style="background: linear-gradient(135deg, #7b83eb, #5a64d8);"></div>
                 {% endif %}
                 <div class="card-content">
                     <h2>{{ university.name }}</h2>
