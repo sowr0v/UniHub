@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students - Uni-Hub</title>
+    <style>
+        /* STRICTLY CSS ONLY - NO EXTERNAL FILES */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #5a64d8;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-right { display: flex; gap: 1.5rem; align-items: center; }
+        .navbar-right a, .navbar-right button {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .navbar-right a:hover, .navbar-right button:hover { text-decoration: underline; }
+
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .stat-card h3 { font-size: 2.5rem; color: #5a64d8; margin-bottom: 0.5rem; }
+        .stat-card p { color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;}
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .table-header {
+            background: #7b83eb;
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .btn-back:hover { background: rgba(255,255,255,0.3); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { font-weight: 600; color: #555; background: #fafafa; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #fdfdfd; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+
+        .btn-delete {
+            background: #e53935;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover { background: #c62828; }
+
+        .messages { margin-bottom: 1rem; }
+        .alert { padding: 10px 15px; border-radius: 4px; margin-bottom: 10px; }
+        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>Uni-Hub Admin</h1>
+        <div class="navbar-right">
+            <span>Welcome, {{ user.username }}</span>
+            <a href="{% url 'home' %}">View Site</a>
+            <form action="{% url 'authentication:logout' %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h3>{{ total_students }}</h3>
+                <p>Registered Students</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Registered Users</h2>
+                <a href="{% url 'custom_admin:dashboard' %}" class="btn-back">&larr; Back to Dashboard</a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Date Joined</th>
+                        <th>Last Login</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><strong>{{ student.username }}</strong></td>
+                        <td>{{ student.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            {% if student.last_login %}
+                                {{ student.last_login|date:"M d, Y" }}
+                            {% else %}
+                                <span style="color: #999;">Never</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="status-badge">Active Student</span></td>
+                        <td>
+                            <form method="POST" action="#" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #777;">No students have registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>
