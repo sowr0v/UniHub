@@ -35,6 +35,11 @@ def home(request):
     institution_type = request.GET.get('institution_type')
     if institution_type:
         universities = universities.filter(institution_type__icontains=institution_type)
+    #6.Sorting By Credit
+    credit_system = request.GET.get('credit_system')
+    if credit_system:
+        # This matches the database field to the dropdown choice
+        universities = universities.filter(credit_system=credit_system)
 
     # --- END NEW FILTERS ---
 
@@ -51,6 +56,7 @@ def home(request):
         'universities': universities
     }
     return render(request, 'home.html', context)
+
 
 
 def university_detail(request, uni_id):
