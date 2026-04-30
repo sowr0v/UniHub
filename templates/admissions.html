@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admission Deadlines - Uni-Hub</title>
+    <!-- Copy the <style> block exactly from your home.html here -->
+</head>
+<body>
+    <!-- Paste your updated Navbar here -->
+
+    <div class="container">
+        <h2 style="color: #e53935; margin-bottom: 2rem;">Urgent Admission Deadlines</h2>
+
+        <div style="display: grid; gap: 1.5rem;">
+            {% for admission in admissions %}
+            <div class="uni-card" style="border-left: 4px solid #e53935; display: flex; justify-content: space-between; align-items: center;">
+
+                <div>
+                    <h3 style="color: #333; margin-bottom: 5px;">{{ admission.university.name }}</h3>
+                    <p style="color: #666; font-weight: 500;">{{ admission.degree_level }}</p>
+                    <p style="color: #e53935; font-weight: bold; margin-top: 10px;">
+                        ⚠️ Deadline: {{ admission.deadline|date:"F j, Y" }}
+                    </p>
+                </div>
+
+                <div>
+                    {% if admission.apply_link %}
+                    <a href="{{ admission.apply_link }}" target="_blank" style="background: #e53935; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold;">Apply Now</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% empty %}
+            <p>No open admissions at this time.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

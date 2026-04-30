@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import University
 from django.shortcuts import render, get_object_or_404
+from .models import University, Event, Admission
 
 def home(request):
     universities = University.objects.all()
@@ -67,3 +68,12 @@ def university_detail(request, uni_id):
         'university': university
     }
     return render(request, 'university_detail.html', context)
+
+def events_list(request):
+    events = Event.objects.all()
+    return render(request, 'events.html', {'events': events})
+
+def admissions_list(request):
+    # Only show admissions that are currently open
+    admissions = Admission.objects.filter(is_open=True)
+    return render(request, 'admissions.html', {'admissions': admissions})

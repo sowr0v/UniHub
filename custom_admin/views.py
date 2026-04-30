@@ -4,6 +4,7 @@ from django.contrib import messages
 from universities.models import University
 from .forms import UniversityForm
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 def is_staff_user(user):
@@ -14,6 +15,12 @@ def is_staff_user(user):
 def dashboard(request):
     """Custom admin dashboard"""
     universities = University.objects.all()
+    search_query = request.GET.get('search')
+    if search_query:
+        universities = universities.filter(
+            Q(name__icontains=search_query) |
+            Q(short_name__icontains=search_query)
+        )
     context = {
         'universities': universities,
         'total_universities': universities.count(),
