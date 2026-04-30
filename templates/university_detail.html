@@ -6,6 +6,19 @@
     <title>{{ university.name }} - Uni-Hub</title>
     <style>
         /* STRICTLY PURE CSS */
+        .btn-website {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #10b981; /* A nice success green */
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.btn-website:hover { background: #059669; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
 
@@ -95,6 +108,15 @@
                 </a>
             </div>
             {% endif %}
+            {% if university.website %}
+<div style="margin-top: 2rem; text-align: center;">
+    <a href="{{ university.website }}" target="_blank" class="btn-website">
+        <!-- Tiny link icon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+        Visit Official Website
+    </a>
+</div>
+{% endif %}
 
         </div>
     </div>

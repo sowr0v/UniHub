@@ -17,7 +17,9 @@ class UniversityForm(forms.ModelForm):
             'publications',
             'cost',
             'admission_requirements',
-            'google_maps_link'
+            'google_maps_link',
+            'website',
+            'credit_system'
         ]
         
     
@@ -33,6 +35,8 @@ class UniversityForm(forms.ModelForm):
             'cost': 'Annual Cost (USD)',
             'admission_requirements': 'Admission Requirements',
             'google_maps_link': 'Google Maps Navigation Link',
+            'website': 'Official Website',
+            'credit_system': 'Credit System',
         }
         
         
@@ -42,13 +46,14 @@ class UniversityForm(forms.ModelForm):
             'qs_ranking': 'Leave blank if not ranked',
             'publications': 'Total number of research publications',
             'cost': 'Annual tuition cost in USD',
+            'website': 'Enter the full URL (e.g., https://uap-bd.edu)',
         }
         
         # Custom widgets for better form styling
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'e.g., Stanford University'
+                'placeholder': 'e.g., University of Asia Pacific'
             }),
             'address': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -98,6 +103,13 @@ class UniversityForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'e.g., https://maps.app.goo.gl/...'
             }),
+            'website': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://...'
+            }),
+            'credit_system': forms.Select(attrs={'class': 'form-control'
+            }),
+
         }
     
     def clean_name(self):

@@ -14,6 +14,12 @@ class University(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     google_maps_link = models.URLField(max_length=500, blank=True, null=True)
+    website = models.URLField(max_length=500, blank=True, null=True)
+    CREDIT_CHOICES = [
+        ('Open', 'Open Credit'),
+        ('Closed', 'Closed Credit'),
+    ]
+    credit_system = models.CharField(max_length=10, choices=CREDIT_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return self.name

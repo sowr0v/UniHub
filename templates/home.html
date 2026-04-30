@@ -171,6 +171,15 @@
         <label>Max Tuition Fee ($)</label>
         <input type="number" name="max_fee" placeholder="e.g. 5000" value="{{ request.GET.max_fee }}">
     </div>
+    <div class="form-group">
+        <label>Credit System</label>
+        <select name="credit_system">
+            <option value="">-- Any System --</option>
+            <!-- The 'value' perfectly matches the choices in your models.py -->
+            <option value="Open" {% if request.GET.credit_system == 'Open' %}selected{% endif %}>Open Credit</option>
+            <option value="Closed" {% if request.GET.credit_system == 'Closed' %}selected{% endif %}>Closed Credit</option>
+        </select>
+    </div>
 
     <div class="form-group">
         <label>Sort By</label>
@@ -208,35 +217,39 @@
 
                 <div class="details-grid">
 
-                    <div class="detail-item">
-                        <span class="detail-label">QS Ranking</span>
-                        <span class="detail-value">
-                            <span class="badge-ranking">#{{ uni.ranking }}</span>
-                        </span>
-                    </div>
+    <div class="detail-item">
+        <span class="detail-label">QS World Ranking</span>
+        <span class="detail-value">
+            {% if uni.qs_ranking %}
+                <span class="badge-ranking">#{{ uni.qs_ranking }}</span>
+            {% else %}
+                <span style="color: #999;">Not Ranked</span>
+            {% endif %}
+        </span>
+    </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Tuition fees per semester</span>
-                        <span class="detail-value">
-                            {% if uni.tuition_fee == 0 %}
-                                none
-                            {% else %}
-                                ${{ uni.tuition_fee }}
-                            {% endif %}
-                        </span>
-                    </div>
+    <div class="detail-item">
+        <span class="detail-label">Annual Cost (USD)</span>
+        <span class="detail-value">
+            {% if uni.cost == 0 or not uni.cost %}
+                Free / None
+            {% else %}
+                ${{ uni.cost }}
+            {% endif %}
+        </span>
+    </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Total Departments</span>
-                        <span class="detail-value">31</span>
-                    </div>
+    <div class="detail-item">
+        <span class="detail-label">Total Departments</span>
+        <span class="detail-value">{{ uni.total_departments|default:"N/A" }}</span>
+    </div>
+    <div class="detail-item">
+                <span class="detail-label">Language</span>
+                <span class="detail-value">English</span>
+    </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Language</span>
-                        <span class="detail-value">English</span>
-                    </div>
 
-                </div>
+</div>
             </div>
             {% empty %}
             <div style="background: white; padding: 2rem; text-align: center; border-radius: 8px;">
