@@ -19,7 +19,8 @@ class UniversityForm(forms.ModelForm):
             'admission_requirements',
             'google_maps_link',
             'website',
-            'credit_system'
+            'credit_system',
+            'short_name',
         ]
         
     
@@ -37,6 +38,7 @@ class UniversityForm(forms.ModelForm):
             'google_maps_link': 'Google Maps Navigation Link',
             'website': 'Official Website',
             'credit_system': 'Credit System',
+            'short_name': 'Short Name / Acronym',
         }
         
         
@@ -108,6 +110,8 @@ class UniversityForm(forms.ModelForm):
                 'placeholder': 'https://...'
             }),
             'credit_system': forms.Select(attrs={'class': 'form-control'
+            }),
+            'short_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., BUET, UAP'
             }),
 
         }

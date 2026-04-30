@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upcoming Events - Uni-Hub</title>
+    <!-- Copy the <style> block exactly from your home.html here -->
+</head>
+<body>
+    <!-- Paste your updated Navbar here -->
+
+    <div class="container">
+        <h2 style="color: #1a56db; margin-bottom: 2rem;">Upcoming University Events</h2>
+
+        <div style="display: grid; gap: 1.5rem;">
+            {% for event in events %}
+            <div class="uni-card" style="border-left: 4px solid #5a64d8;">
+                <h3 style="color: #333; margin-bottom: 5px;">{{ event.title }}</h3>
+                <p style="color: #1a56db; font-weight: bold; margin-bottom: 1rem;">Hosted by: <a href="{% url 'university_detail' event.university.id %}">{{ event.university.name }}</a></p>
+
+                <p style="color: #555; margin-bottom: 1rem;">{{ event.description }}</p>
+
+                <div style="display: flex; gap: 2rem; font-size: 0.9rem; color: #666; background: #f4f7f6; padding: 10px; border-radius: 6px;">
+                    <span>📅 {{ event.event_date|date:"F j, Y - g:i A" }}</span>
+                    <span>📍 {{ event.location }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <p>No upcoming events at this time.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

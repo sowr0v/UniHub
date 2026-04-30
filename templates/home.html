@@ -96,8 +96,22 @@
 </head>
 <body>
 
+    <!-- TOP NAVBAR -->
     <nav class="navbar">
-        <h1>Uni-Hub</h1>
+
+        <!-- LEFT SIDE: Logo & Quick Links -->
+        <div style="display: flex; align-items: baseline; gap: 2rem;">
+            <a href="{% url 'home' %}" style="text-decoration: none; color: white;">
+                <h1 style="margin: 0;">Uni-Hub</h1>
+            </a>
+
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="{% url 'events' %}" style="color: #e0e7ff; text-decoration: none; font-weight: 600; font-size: 1.05rem;">Events</a>
+                <a href="{% url 'admissions' %}" style="color: #e0e7ff; text-decoration: none; font-weight: 600; font-size: 1.05rem;">Admissions 🔔</a>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: User Controls -->
         <div class="top-nav-controls">
             {% if request.user.is_authenticated %}
                 <a href="{% url 'authentication:profile' %}" class="user-greeting">Hi, {{ request.user.username }}!</a>
@@ -115,6 +129,7 @@
                 <a href="{% url 'authentication:register' %}" class="nav-btn btn-solid">Sign Up</a>
             {% endif %}
         </div>
+
     </nav>
 
     <div class="container">
