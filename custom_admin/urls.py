@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete/<int:pk>/', views.delete_university, name='delete_university'),
     path('users/', views.manage_users, name='manage_users'),
     path('users/delete/<int:user_id>/', views.delete_student, name='delete_student'),
+    path('upload-csv/', views.upload_universities_csv, name='upload_csv'),
 ]

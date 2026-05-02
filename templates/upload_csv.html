@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Upload Universities | Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+    }
+    .upload-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    .upload-header h2 {
+        color: var(--primary);
+    }
+    .upload-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+    .file-input-wrapper {
+        border: 2px dashed var(--border);
+        padding: 3rem;
+        border-radius: var(--radius);
+        text-align: center;
+        width: 100%;
+        background: var(--background);
+        transition: var(--transition);
+    }
+    .file-input-wrapper:hover {
+        border-color: var(--primary);
+        background: #e0e7ff;
+    }
+    .file-input {
+        margin-top: 1rem;
+    }
+    .format-guide {
+        margin-top: 3rem;
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+    }
+    .format-guide h4 {
+        margin-bottom: 1rem;
+        color: var(--text-main);
+    }
+    .table-preview {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        margin-top: 1rem;
+    }
+    .table-preview th, .table-preview td {
+        border: 1px solid var(--border);
+        padding: 8px;
+        text-align: left;
+    }
+    .table-preview th {
+        background: var(--primary);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="upload-header">
+        <h2>Bulk Upload Universities</h2>
+        <p>Upload a .csv file to automatically add universities to the database.</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+        <div class="file-input-wrapper">
+            <svg width="48" height="48" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <br>
+            <input type="file" name="csv_file" accept=".csv" required class="file-input">
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+            Upload and Process
+        </button>
+    </form>
+
+    <div class="format-guide">
+        <h4>Expected CSV Format</h4>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Ensure your CSV has a header row. The columns must be exactly in this order:</p>
+        <div style="overflow-x: auto;">
+            <table class="table-preview">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Total Depts</th>
+                        <th>Faculty</th>
+                        <th>QS Rank</th>
+                        <th>Publications</th>
+                        <th>Cost</th>
+                        <th>Admission Reqs</th>
+                        <th>Website</th>
+                        <th>Short Name</th>
+                        <th>Credit System</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>University of Asia Pacific</td>
+                        <td>Farmgate,Dhaka</td>
+                        <td>02-58157091</td>
+                        <td>50</td>
+                        <td>80</td>
+                        <td>1</td>
+                        <td>1000</td>
+                        <td>100000.00</td>
+                        <td>GPA 4.5</td>
+                        <td>https://uap-bd.edu </td>
+                        <td>UAP</td>
+                        <td>Closed</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
