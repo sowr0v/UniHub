@@ -1,280 +1,349 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uni-Hub | Central Portal</title>
-    <style>
-        /* STRICTLY PURE CSS */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f8f9fa; color: #333; }
+{% extends 'base.html' %}
 
-        /* --- Navbar Styles --- */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #5a64d8;
-            padding: 1rem 2rem;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .top-nav-controls { display: flex; align-items: center; gap: 15px; }
-        .nav-btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; border: none; transition: opacity 0.2s; }
-        .nav-btn:hover { opacity: 0.8; }
-        .btn-outline { background: transparent; color: white; border: 2px solid white; }
-        .btn-solid { background: white; color: #5a64d8; }
-        .btn-danger { background: #e53935; color: white; }
-        .user-greeting { color: white; font-weight: 500; font-size: 0.95rem; text-decoration: underline; cursor: pointer; }
+{% block title %}Home | Uni-Hub{% endblock %}
 
-        /* --- Page Layout --- */
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            display: flex;
-            gap: 2rem;
-            align-items: flex-start;
-        }
+{% block extra_css %}
+<style>
+    /* Home Layout */
+    .home-layout {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+    }
 
-        /* --- Filter Sidebar --- */
-        .filter-sidebar {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            width: 300px;
-            flex-shrink: 0;
-        }
-        .filter-sidebar h3 { color: #4a54c4; margin-bottom: 1rem; font-size: 1.2rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #555; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
-        .btn-filter { width: 100%; padding: 10px; background: #5a64d8; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 1rem; }
-        .btn-filter:hover { background: #4a54c4; }
+    /* Modern Filter Sidebar */
+    .filter-sidebar {
+        background: var(--surface);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        width: 300px;
+        flex-shrink: 0;
+        border: 1px solid var(--border);
+        position: sticky;
+        top: 100px; /* Below navbar */
+    }
 
-        /* --- University List Area --- */
-        .results-area { flex-grow: 1; }
+    .filter-sidebar h3 {
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-        /* --- Clean Card Design (From your screenshot) --- */
-        .uni-card {
-            background: white;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 1rem;
-        }
-        .uni-title {
-            color: #1a56db;
-            font-size: 1.4rem;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 1.5rem;
-        }
-        .uni-title:hover { text-decoration: underline; }
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two columns */
-            gap: 1.5rem;
-        }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-        .detail-item { display: flex; flex-direction: column; }
-        .detail-label { font-weight: bold; color: #333; margin-bottom: 0.2rem; }
-        .detail-value { color: #555; font-size: 0.95rem; }
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        background: var(--background);
+        transition: var(--transition);
+        outline: none;
+    }
 
-        .badge-ranking {
-            background-color: #fde047;
-            color: #854d0e;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-    </style>
-</head>
-<body>
+    .form-group input:focus, .form-group select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
 
-    <!-- TOP NAVBAR -->
-    <nav class="navbar">
+    .btn-filter {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: var(--transition);
+    }
 
-        <!-- LEFT SIDE: Logo & Quick Links -->
-        <div style="display: flex; align-items: baseline; gap: 2rem;">
-            <a href="{% url 'home' %}" style="text-decoration: none; color: white;">
-                <h1 style="margin: 0;">Uni-Hub</h1>
-            </a>
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
 
-            <div style="display: flex; gap: 1.5rem;">
-                <a href="{% url 'events' %}" style="color: #e0e7ff; text-decoration: none; font-weight: 600; font-size: 1.05rem;">Events</a>
-                <a href="{% url 'admissions' %}" style="color: #e0e7ff; text-decoration: none; font-weight: 600; font-size: 1.05rem;">Admissions 🔔</a>
-            </div>
-        </div>
+    .clear-filters {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+    }
+    .clear-filters:hover {
+        color: var(--danger);
+    }
 
-        <!-- RIGHT SIDE: User Controls -->
-        <div class="top-nav-controls">
-            {% if request.user.is_authenticated %}
-                <a href="{% url 'authentication:profile' %}" class="user-greeting">Hi, {{ request.user.username }}!</a>
+    /* Results Area */
+    .results-area {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-                {% if request.user.is_staff %}
-                    <a href="{% url 'custom_admin:dashboard' %}" class="nav-btn btn-solid">Dashboard</a>
-                {% endif %}
+    /* Enhanced Card */
+    .uni-card {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-                <form action="{% url 'authentication:logout' %}" method="POST" style="margin: 0; display: flex;">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-btn btn-danger">Logout</button>
-                </form>
-            {% else %}
-                <a href="{% url 'authentication:login' %}" class="nav-btn btn-outline">Login</a>
-                <a href="{% url 'authentication:register' %}" class="nav-btn btn-solid">Sign Up</a>
-            {% endif %}
-        </div>
+    .uni-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 
-    </nav>
+    .uni-title {
+        color: var(--text-main);
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    .uni-title:hover {
+        color: var(--primary);
+    }
 
-    <div class="container">
+    .map-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: #fee2e2;
+        border-radius: 50%;
+        color: var(--danger);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    .map-btn:hover {
+        background: var(--danger);
+        color: white;
+        transform: scale(1.1);
+    }
 
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        background: var(--background);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: var(--text-main);
+    }
+
+    .badge-ranking {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px dashed #cbd5e1;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="home-layout">
+    <!-- FILTER SIDEBAR -->
+    <aside class="filter-sidebar">
+        <h3>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+            Filters
+        </h3>
         <form method="GET" action="{% url 'home' %}">
+            
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" placeholder="e.g. Dhaka" value="{{ request.GET.location }}">
+            </div>
 
-    <div class="form-group">
-        <label>Location</label>
-        <input type="text" name="location" placeholder="e.g. Dhaka" value="{{ request.GET.location }}">
-    </div>
+            <div class="form-group">
+                <label>Degree Level</label>
+                <select name="course_type">
+                    <option value="">-- All Levels --</option>
+                    <option value="Bachelor" {% if request.GET.course_type == 'Bachelor' %}selected{% endif %}>Bachelor's Degree</option>
+                    <option value="Master" {% if request.GET.course_type == 'Master' %}selected{% endif %}>Master's Degree</option>
+                    <option value="PhD" {% if request.GET.course_type == 'PhD' %}selected{% endif %}>PhD / Doctorate</option>
+                </select>
+            </div>
 
-    <div class="form-group">
-        <label>Degree Level</label>
-        <select name="course_type">
-            <option value="">-- All Levels --</option>
-            <option value="Bachelor" {% if request.GET.course_type == 'Bachelor' %}selected{% endif %}>Bachelor's Degree</option>
-            <option value="Master" {% if request.GET.course_type == 'Master' %}selected{% endif %}>Master's Degree</option>
-            <option value="PhD" {% if request.GET.course_type == 'PhD' %}selected{% endif %}>PhD / Doctorate</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label>Institution Type</label>
+                <select name="institution_type">
+                    <option value="">-- All Types --</option>
+                    <option value="University" {% if request.GET.institution_type == 'University' %}selected{% endif %}>University</option>
+                    <option value="Applied" {% if request.GET.institution_type == 'Applied' %}selected{% endif %}>Applied Sciences</option>
+                    <option value="College" {% if request.GET.institution_type == 'College' %}selected{% endif %}>College</option>
+                </select>
+            </div>
 
-    <div class="form-group">
-        <label>Institution Type</label>
-        <select name="institution_type">
-            <option value="">-- All Types --</option>
-            <option value="University" {% if request.GET.institution_type == 'University' %}selected{% endif %}>University</option>
-            <option value="Applied" {% if request.GET.institution_type == 'Applied' %}selected{% endif %}>Applied Sciences</option>
-            <option value="College" {% if request.GET.institution_type == 'College' %}selected{% endif %}>College</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label>Subject Group</label>
+                <select name="subject_group">
+                    <option value="">-- All Subjects --</option>
+                    <option value="Engineering" {% if request.GET.subject_group == 'Engineering' %}selected{% endif %}>Engineering & Tech</option>
+                    <option value="Business" {% if request.GET.subject_group == 'Business' %}selected{% endif %}>Business & Management</option>
+                    <option value="Science" {% if request.GET.subject_group == 'Science' %}selected{% endif %}>Natural Sciences</option>
+                    <option value="Arts" {% if request.GET.subject_group == 'Arts' %}selected{% endif %}>Arts & Humanities</option>
+                    <option value="Medical" {% if request.GET.subject_group == 'Medical' %}selected{% endif %}>Medicine & Health</option>
+                </select>
+            </div>
 
-    <div class="form-group">
-        <label>Subject Group</label>
-        <select name="subject_group">
-            <option value="">-- All Subjects --</option>
-            <option value="Engineering" {% if request.GET.subject_group == 'Engineering' %}selected{% endif %}>Engineering & Tech</option>
-            <option value="Business" {% if request.GET.subject_group == 'Business' %}selected{% endif %}>Business & Management</option>
-            <option value="Science" {% if request.GET.subject_group == 'Science' %}selected{% endif %}>Natural Sciences</option>
-            <option value="Arts" {% if request.GET.subject_group == 'Arts' %}selected{% endif %}>Arts & Humanities</option>
-            <option value="Medical" {% if request.GET.subject_group == 'Medical' %}selected{% endif %}>Medicine & Health</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label>Language</label>
+                <select name="language">
+                    <option value="">-- Any Language --</option>
+                    <option value="English" {% if request.GET.language == 'English' %}selected{% endif %}>English</option>
+                    <option value="Bengali" {% if request.GET.language == 'Bengali' %}selected{% endif %}>Bengali</option>
+                </select>
+            </div>
 
-    <div class="form-group">
-        <label>Language</label>
-        <select name="language">
-            <option value="">-- Any Language --</option>
-            <option value="English" {% if request.GET.language == 'English' %}selected{% endif %}>English</option>
-            <option value="Bengali" {% if request.GET.language == 'Bengali' %}selected{% endif %}>Bengali</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label>Max Tuition Fee ($)</label>
+                <input type="number" name="max_fee" placeholder="e.g. 5000" value="{{ request.GET.max_fee }}">
+            </div>
 
-    <div class="form-group">
-        <label>Max Tuition Fee ($)</label>
-        <input type="number" name="max_fee" placeholder="e.g. 5000" value="{{ request.GET.max_fee }}">
-    </div>
-    <div class="form-group">
-        <label>Credit System</label>
-        <select name="credit_system">
-            <option value="">-- Any System --</option>
-            <!-- The 'value' perfectly matches the choices in your models.py -->
-            <option value="Open" {% if request.GET.credit_system == 'Open' %}selected{% endif %}>Open Credit</option>
-            <option value="Closed" {% if request.GET.credit_system == 'Closed' %}selected{% endif %}>Closed Credit</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label>Credit System</label>
+                <select name="credit_system">
+                    <option value="">-- Any System --</option>
+                    <option value="Open" {% if request.GET.credit_system == 'Open' %}selected{% endif %}>Open Credit</option>
+                    <option value="Closed" {% if request.GET.credit_system == 'Closed' %}selected{% endif %}>Closed Credit</option>
+                </select>
+            </div>
 
-    <div class="form-group">
-        <label>Sort By</label>
-        <select name="sort">
-            <option value="">-- Best Match --</option>
-            <option value="ranking" {% if request.GET.sort == 'ranking' %}selected{% endif %}>Highest Ranking</option>
-            <option value="fee_low" {% if request.GET.sort == 'fee_low' %}selected{% endif %}>Tuition: Low to High</option>
-            <option value="fee_high" {% if request.GET.sort == 'fee_high' %}selected{% endif %}>Tuition: High to Low</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label>Sort By</label>
+                <select name="sort">
+                    <option value="">-- Best Match --</option>
+                    <option value="ranking" {% if request.GET.sort == 'ranking' %}selected{% endif %}>Highest Ranking</option>
+                    <option value="fee_low" {% if request.GET.sort == 'fee_low' %}selected{% endif %}>Tuition: Low to High</option>
+                    <option value="fee_high" {% if request.GET.sort == 'fee_high' %}selected{% endif %}>Tuition: High to Low</option>
+                </select>
+            </div>
 
-    <button type="submit" class="btn-filter">Search & Sort</button>
+            <button type="submit" class="btn-filter">Search & Sort</button>
 
-    {% if request.GET %}
-        <a href="{% url 'home' %}" style="display:block; text-align:center; margin-top:10px; color:#666; text-decoration:none; font-size:0.9rem;">Clear Filters</a>
-    {% endif %}
-</form>
+            {% if request.GET %}
+                <a href="{% url 'home' %}" class="clear-filters">Clear Filters</a>
+            {% endif %}
+        </form>
+    </aside>
 
-        <div class="results-area">
-
-            {% for uni in universities %}
-            <div class="uni-card">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-    <a href="{% url 'university_detail' uni.id %}" class="uni-title" style="margin-bottom: 0;">{{ uni.name }}</a>
-
-    {% if uni.google_maps_link %}
-        <a href="{{ uni.google_maps_link }}" target="_blank" title="View on Google Maps" style="display: flex; align-items: center; padding: 5px; background: #fce8e6; border-radius: 50%; transition: transform 0.2s;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-        </a>
-    {% endif %}
-</div>
+    <!-- RESULTS AREA -->
+    <div class="results-area">
+        {% for uni in universities %}
+            <article class="card uni-card">
+                <div class="uni-header">
+                    <a href="{% url 'university_detail' uni.id %}" class="uni-title">{{ uni.name }}</a>
+                    
+                    {% if uni.google_maps_link %}
+                        <a href="{{ uni.google_maps_link }}" target="_blank" class="map-btn" title="View on Google Maps">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </a>
+                    {% endif %}
+                </div>
 
                 <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">QS World Ranking</span>
+                        <span class="detail-value">
+                            {% if uni.qs_ranking %}
+                                <span class="badge-ranking">#{{ uni.qs_ranking }}</span>
+                            {% else %}
+                                <span style="color: var(--text-muted);">Not Ranked</span>
+                            {% endif %}
+                        </span>
+                    </div>
 
-    <div class="detail-item">
-        <span class="detail-label">QS World Ranking</span>
-        <span class="detail-value">
-            {% if uni.qs_ranking %}
-                <span class="badge-ranking">#{{ uni.qs_ranking }}</span>
-            {% else %}
-                <span style="color: #999;">Not Ranked</span>
-            {% endif %}
-        </span>
+                    <div class="detail-item">
+                        <span class="detail-label">Annual Cost (USD)</span>
+                        <span class="detail-value" style="color: var(--success); font-weight: 600;">
+                            {% if uni.cost == 0 or not uni.cost %}
+                                Free / None
+                            {% else %}
+                                ${{ uni.cost }}
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Total Departments</span>
+                        <span class="detail-value">{{ uni.total_departments|default:"N/A" }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Language</span>
+                        <span class="detail-value">English</span>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <div class="no-results">
+                <svg width="48" height="48" fill="none" stroke="#cbd5e1" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h3>No universities match your search criteria.</h3>
+                <p style="margin-top: 0.5rem;">Try clearing your filters or searching for a different location.</p>
+            </div>
+        {% endfor %}
     </div>
-
-    <div class="detail-item">
-        <span class="detail-label">Annual Cost (USD)</span>
-        <span class="detail-value">
-            {% if uni.cost == 0 or not uni.cost %}
-                Free / None
-            {% else %}
-                ${{ uni.cost }}
-            {% endif %}
-        </span>
-    </div>
-
-    <div class="detail-item">
-        <span class="detail-label">Total Departments</span>
-        <span class="detail-value">{{ uni.total_departments|default:"N/A" }}</span>
-    </div>
-    <div class="detail-item">
-                <span class="detail-label">Language</span>
-                <span class="detail-value">English</span>
-    </div>
-
-
 </div>
-            </div>
-            {% empty %}
-            <div style="background: white; padding: 2rem; text-align: center; border-radius: 8px;">
-                <h3 style="color: #666;">No universities match your search criteria.</h3>
-                <p>Try clearing your filters or searching for a different location.</p>
-            </div>
-            {% endfor %}
-
-        </div>
-    </div>
-
-</body>
-</html>
+{% endblock %}
