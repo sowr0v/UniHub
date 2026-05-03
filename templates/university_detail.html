@@ -127,7 +127,7 @@
         line-height: 1.6;
     }
 
-    /* Action Bar */
+
     .action-bar {
         display: flex;
         gap: 1rem;
@@ -178,7 +178,7 @@
 {% block content %}
 <a href="{% url 'home' %}" class="btn btn-outline" style="margin-bottom: 1.5rem;">&larr; Back to Results</a>
 
-<!-- Hero Banner -->
+<!-- Hero -->
 <div class="hero-banner">
     <div class="hero-bg"></div>
     <div class="hero-content">
@@ -193,7 +193,6 @@
     </div>
 </div>
 
-<!-- Action Bar -->
 <div class="action-bar">
     {% if university.google_maps_link %}
         <a href="{{ university.google_maps_link }}" target="_blank" class="btn btn-map">
@@ -209,7 +208,6 @@
     {% endif %}
 </div>
 
-<!-- Bento-Box Stats Grid -->
 <div class="bento-grid">
     <div class="bento-card">
         <svg class="bento-icon" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -218,7 +216,7 @@
             {% if university.cost == 0 or not university.cost %}
                 Free / None
             {% else %}
-                ${{ university.cost }} USD
+                ৳{{ university.cost }}
             {% endif %}
         </div>
     </div>
@@ -254,7 +252,6 @@
     </div>
 </div>
 
-<!-- Admission Requirements -->
 {% if university.admission_requirements %}
 <div class="req-box">
     <h3>Admission Requirements</h3>
@@ -262,7 +259,6 @@
 </div>
 {% endif %}
 
-<!-- Dynamic Admissions List -->
 {% if university.admissions.all %}
 <h2 class="section-title">
     <svg width="24" height="24" fill="none" stroke="var(--danger)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -281,7 +277,6 @@
 </div>
 {% endif %}
 
-<!-- Dynamic Events List -->
 {% if university.events.all %}
 <h2 class="section-title">
     <svg width="24" height="24" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
