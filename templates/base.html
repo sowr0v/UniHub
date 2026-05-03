@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Uni-Hub{% endblock %}</title>
-    <!-- Use Google Fonts for Modern Typography -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- PURE CSS DESIGN SYSTEM --- */
+        /* Design System */
         :root {
             --primary: #4f46e5;       /* Indigo */
             --primary-hover: #4338ca;
@@ -42,7 +42,7 @@
             min-height: 100vh;
         }
 
-        /* --- MODERN NAVBAR (GLASSMORPHISM) --- */
+        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -108,7 +108,7 @@
             gap: 1rem;
         }
 
-        /* --- BUTTONS --- */
+        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -160,7 +160,7 @@
             text-decoration: none;
         }
 
-        /* --- LAYOUT --- */
+        /* Layout */
         .main-content {
             flex: 1;
             max-width: 1200px;
@@ -169,7 +169,7 @@
             padding: 0 2rem;
         }
 
-        /* --- ALERTS / MESSAGES --- */
+        /* Alerts */
         .messages {
             margin-bottom: 2rem;
         }
@@ -196,7 +196,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- PREMIUM CARD DESIGN --- */
+        /* Premium Card */
         .card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -213,7 +213,7 @@
             border-color: #cbd5e1;
         }
 
-        /* --- FOOTER --- */
+        /* Footer */
         .footer {
             background: var(--surface);
             border-top: 1px solid var(--border);
@@ -225,12 +225,12 @@
         }
 
     </style>
-    <!-- Block-specific styles can be added in child templates -->
+    <!-- Extra CSS block -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    <!-- Navbar -->
     <nav class="navbar">
         <a href="{% url 'home' %}" class="nav-brand">Uni-Hub</a>
 
@@ -258,7 +258,7 @@
         </div>
     </nav>
 
-    <!-- MESSAGES -->
+    <!-- Messages -->
     <div class="main-content">
         {% if messages %}
             <div class="messages">
@@ -270,12 +270,12 @@
             </div>
         {% endif %}
 
-        <!-- MAIN CONTENT BLOCK -->
+        <!-- Content Block -->
         {% block content %}
         {% endblock %}
     </div>
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <footer class="footer">
         <p>&copy; {% now "Y" %} Uni-Hub Portal. Built without JavaScript.</p>
     </footer>

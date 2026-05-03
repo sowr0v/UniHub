@@ -4,14 +4,13 @@
 
 {% block extra_css %}
 <style>
-    /* Home Layout */
+
     .home-layout {
         display: flex;
         gap: 2rem;
         align-items: flex-start;
     }
 
-    /* Modern Filter Sidebar */
     .filter-sidebar {
         background: var(--surface);
         padding: 1.5rem;
@@ -95,7 +94,7 @@
         color: var(--danger);
     }
 
-    /* Results Area */
+
     .results-area {
         flex-grow: 1;
         display: flex;
@@ -103,7 +102,7 @@
         gap: 1.5rem;
     }
 
-    /* Enhanced Card */
+
     .uni-card {
         padding: 2rem;
         display: flex;
@@ -200,7 +199,7 @@
 
 {% block content %}
 <div class="home-layout">
-    <!-- FILTER SIDEBAR -->
+
     <aside class="filter-sidebar">
         <h3>
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
@@ -210,12 +209,12 @@
             
             <div class="form-group">
                 <label>Location</label>
-                <input type="text" name="location" placeholder="e.g. Dhaka" value="{{ request.GET.location }}">
+                <input type="text" name="location" placeholder="e.g. Dhaka" value="{{ request.GET.location }}" onchange="this.form.submit()">
             </div>
 
             <div class="form-group">
                 <label>Degree Level</label>
-                <select name="course_type">
+                <select name="course_type" onchange="this.form.submit()">
                     <option value="">-- All Levels --</option>
                     <option value="Bachelor" {% if request.GET.course_type == 'Bachelor' %}selected{% endif %}>Bachelor's Degree</option>
                     <option value="Master" {% if request.GET.course_type == 'Master' %}selected{% endif %}>Master's Degree</option>
@@ -225,7 +224,7 @@
 
             <div class="form-group">
                 <label>Institution Type</label>
-                <select name="institution_type">
+                <select name="institution_type" onchange="this.form.submit()">
                     <option value="">-- All Types --</option>
                     <option value="University" {% if request.GET.institution_type == 'University' %}selected{% endif %}>University</option>
                     <option value="Applied" {% if request.GET.institution_type == 'Applied' %}selected{% endif %}>Applied Sciences</option>
@@ -235,7 +234,7 @@
 
             <div class="form-group">
                 <label>Subject Group</label>
-                <select name="subject_group">
+                <select name="subject_group" onchange="this.form.submit()">
                     <option value="">-- All Subjects --</option>
                     <option value="Engineering" {% if request.GET.subject_group == 'Engineering' %}selected{% endif %}>Engineering & Tech</option>
                     <option value="Business" {% if request.GET.subject_group == 'Business' %}selected{% endif %}>Business & Management</option>
@@ -247,7 +246,7 @@
 
             <div class="form-group">
                 <label>Language</label>
-                <select name="language">
+                <select name="language" onchange="this.form.submit()">
                     <option value="">-- Any Language --</option>
                     <option value="English" {% if request.GET.language == 'English' %}selected{% endif %}>English</option>
                     <option value="Bengali" {% if request.GET.language == 'Bengali' %}selected{% endif %}>Bengali</option>
@@ -255,13 +254,13 @@
             </div>
 
             <div class="form-group">
-                <label>Max Tuition Fee ($)</label>
-                <input type="number" name="max_fee" placeholder="e.g. 5000" value="{{ request.GET.max_fee }}">
+                <label>Max Tuition Fee (৳)</label>
+                <input type="number" name="max_fee" placeholder="e.g. 5000" value="{{ request.GET.max_fee }}" onchange="this.form.submit()">
             </div>
 
             <div class="form-group">
                 <label>Credit System</label>
-                <select name="credit_system">
+                <select name="credit_system" onchange="this.form.submit()">
                     <option value="">-- Any System --</option>
                     <option value="Open" {% if request.GET.credit_system == 'Open' %}selected{% endif %}>Open Credit</option>
                     <option value="Closed" {% if request.GET.credit_system == 'Closed' %}selected{% endif %}>Closed Credit</option>
@@ -270,7 +269,7 @@
 
             <div class="form-group">
                 <label>Sort By</label>
-                <select name="sort">
+                <select name="sort" onchange="this.form.submit()">
                     <option value="">-- Best Match --</option>
                     <option value="ranking" {% if request.GET.sort == 'ranking' %}selected{% endif %}>Highest Ranking</option>
                     <option value="fee_low" {% if request.GET.sort == 'fee_low' %}selected{% endif %}>Tuition: Low to High</option>
@@ -278,7 +277,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-filter">Search & Sort</button>
+
 
             {% if request.GET %}
                 <a href="{% url 'home' %}" class="clear-filters">Clear Filters</a>
@@ -286,7 +285,7 @@
         </form>
     </aside>
 
-    <!-- RESULTS AREA -->
+
     <div class="results-area">
         {% for uni in universities %}
             <article class="card uni-card">
@@ -316,12 +315,12 @@
                     </div>
 
                     <div class="detail-item">
-                        <span class="detail-label">Annual Cost (USD)</span>
+                        <span class="detail-label">Annual Cost (৳)</span>
                         <span class="detail-value" style="color: var(--success); font-weight: 600;">
                             {% if uni.cost == 0 or not uni.cost %}
                                 Free / None
                             {% else %}
-                                ${{ uni.cost }}
+                                ৳{{ uni.cost }}
                             {% endif %}
                         </span>
                     </div>

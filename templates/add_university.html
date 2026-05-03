@@ -32,7 +32,7 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
-        .form-group input, .form-group textarea {
+        .form-group input:not([type="checkbox"]), .form-group textarea, .form-group select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -40,9 +40,32 @@
             font-size: 14px;
         }
         .form-group textarea { min-height: 100px; resize: vertical; }
-        .form-group input:focus, .form-group textarea:focus {
+        .form-group input:not([type="checkbox"]):focus, .form-group textarea:focus, .form-group select:focus {
             outline: none;
             border-color: #667eea;
+        }
+        .form-group ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .form-group ul li {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .form-group ul li label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+        .form-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+            cursor: pointer;
         }
         .form-actions {
             display: flex;

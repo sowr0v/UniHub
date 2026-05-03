@@ -6,52 +6,52 @@ from .models import University, Event, Admission
 def home(request):
     universities = University.objects.all()
 
-    # 1. Location & Fee (Existing)
+    # Location and Fee
     location_query = request.GET.get('location')
     if location_query:
-        universities = universities.filter(location__icontains=location_query)
+        universities = universities.filter(address__icontains=location_query)
 
     max_fee = request.GET.get('max_fee')
     if max_fee:
-        universities = universities.filter(tuition_fee__lte=max_fee)
+        universities = universities.filter(cost__lte=max_fee)
 
-    # --- NEW ADVANCED FILTERS ---
+    # Advanced Filters
 
-    # 2. Degree / Course Type (e.g., Bachelor, Master)
+    # Degree / Course Type
     course_type = request.GET.get('course_type')
     if course_type:
         universities = universities.filter(course_type__icontains=course_type)
 
-    # 3. Subject Group
+    # Subject Group
     subject_group = request.GET.get('subject_group')
     if subject_group:
         universities = universities.filter(subject_group__icontains=subject_group)
 
-    # 4. Language
+    # Language
     language = request.GET.get('language')
     if language:
         universities = universities.filter(language__icontains=language)
 
-    # 5. Institution Type (e.g., University, Applied Sciences)
+    # Institution Type
     institution_type = request.GET.get('institution_type')
     if institution_type:
         universities = universities.filter(institution_type__icontains=institution_type)
-    #6.Sorting By Credit
+    # Sorting by Credit
     credit_system = request.GET.get('credit_system')
     if credit_system:
         # This matches the database field to the dropdown choice
         universities = universities.filter(credit_system=credit_system)
 
-    # --- END NEW FILTERS ---
 
-    # 6. Sorting (Existing)
+
+    # Sorting
     sort_by = request.GET.get('sort')
     if sort_by == 'ranking':
-        universities = universities.order_by('ranking')
+        universities = universities.order_by('qs_ranking')
     elif sort_by == 'fee_low':
-        universities = universities.order_by('tuition_fee')
+        universities = universities.order_by('cost')
     elif sort_by == 'fee_high':
-        universities = universities.order_by('-tuition_fee')
+        universities = universities.order_by('-cost')
 
     context = {
         'universities': universities
@@ -61,7 +61,7 @@ def home(request):
 
 
 def university_detail(request, uni_id):
-    # Fetch the specific university or return a 404 error if it doesn't exist
+    # Fetch specific university
     university = get_object_or_404(University, id=uni_id)
 
     context = {
@@ -74,6 +74,6 @@ def events_list(request):
     return render(request, 'events.html', {'events': events})
 
 def admissions_list(request):
-    # Only show admissions that are currently open
+    # Show open admissions
     admissions = Admission.objects.filter(is_open=True)
     return render(request, 'admissions.html', {'admissions': admissions})

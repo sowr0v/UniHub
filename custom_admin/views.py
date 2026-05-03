@@ -89,7 +89,7 @@ def delete_university(request, pk):
 @user_passes_test(is_staff_user)
 def manage_users(request):
     """View to list all non-admin users"""
-    # Grab all users where is_staff is False
+    # Get non-staff users
     students = User.objects.filter(is_staff=False).order_by('-date_joined')
 
     context = {
@@ -104,7 +104,7 @@ def manage_users(request):
 def delete_student(request, user_id):
     """Securely deletes a student account"""
     if request.method == 'POST':
-        # Ensure we only delete non-staff users
+        # Ensure user is not staff
         student = get_object_or_404(User, id=user_id, is_staff=False)
         username = student.username
         student.delete()
@@ -129,18 +129,18 @@ def upload_universities_csv(request):
             return redirect('custom_admin:upload_csv')
             
         try:
-            # Read and decode the file
+            # Read and decode CSV
             data_set = csv_file.read().decode('UTF-8')
             io_string = io.StringIO(data_set)
             
-            # Skip the header row
+            # Skip header
             next(io_string)
             
             count = 0
             for row in csv.reader(io_string, delimiter=',', quotechar='"'):
-                # Expected columns: Name, Address, Contact, Total Departments, Faculty, QS Ranking, Publications, Cost, Admission Requirements, Website, Short Name, Credit System
+                # Expected: Name, Address, Contact, Total Departments, Faculty, QS Ranking, Publications, Cost, Admission Requirements, Website, Short Name, Credit System
                 if len(row) < 3:
-                    continue # Skip empty or invalid rows
+                    continue
                     
                 University.objects.create(
                     name=row[0].strip(),
@@ -165,4 +165,4 @@ def upload_universities_csv(request):
             messages.error(request, f"Error processing file: {str(e)}")
             return redirect('custom_admin:upload_csv')
             
-    return render(request, 'upload_csv.html')
+    return render(request, 'upload_csv.html')

@@ -16,6 +16,10 @@ class University(models.Model):
     google_maps_link = models.URLField(max_length=500, blank=True, null=True)
     website = models.URLField(max_length=500, blank=True, null=True)
     short_name = models.CharField(max_length=50, blank=True, null=True, help_text="e.g., BUET,BRACU,NSU,AIUB, UAP")
+    course_type = models.CharField(max_length=50, blank=True, null=True)
+    subject_group = models.CharField(max_length=50, blank=True, null=True)
+    language = models.CharField(max_length=50, blank=True, null=True)
+    institution_type = models.CharField(max_length=50, blank=True, null=True)
     CREDIT_CHOICES = [
         ('Open', 'Open Credit'),
         ('Closed', 'Closed Credit'),
