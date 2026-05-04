@@ -296,4 +296,19 @@
 </div>
 {% endif %}
 
+{% if clubs %}
+<h2 class="section-title">
+    <svg width="24" height="24" fill="none" stroke="var(--secondary)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+    University Clubs
+</h2>
+<div class="dynamic-grid">
+    {% for club in clubs %}
+        <div class="card club-card">
+            <h3 style="color: var(--text-main); margin-bottom: 10px;">{{ club.name }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">{{ club.description|truncatewords:20 }}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 {% endblock %}
