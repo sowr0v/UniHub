@@ -28,6 +28,14 @@
 
     .event-card {
         border-left: 5px solid var(--primary);
+        padding: 0;
+        overflow: hidden;
+    }
+    .event-card-media {
+        background: linear-gradient(135deg, #e0e7ff, #fce7f3);
+    }
+    .event-card-body {
+        padding: 1.5rem;
     }
 
     .event-title {
@@ -71,18 +79,43 @@
         align-items: center;
         gap: 8px;
     }
+    .past-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+    }
+    .past-section h3 {
+        font-size: 1.15rem;
+        color: var(--text-muted);
+        margin-bottom: 1.25rem;
+        text-align: center;
+        font-weight: 600;
+    }
+    .event-card.past {
+        border-left-color: var(--border);
+        opacity: 0.92;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h2>Upcoming University Events</h2>
-    <p>Join seminars, open days, and online webinars.</p>
+    <h2>University events</h2>
+    <p>Seminars, open days, and webinars — maintained by staff from the dashboard.</p>
+    <p style="margin-top: 0.75rem; font-size: 0.95rem;">
+        Looking for application dates? See the <a href="{% url 'admission:admissions_hub' %}" style="color: var(--primary); font-weight: 600;">admissions center</a>.
+    </p>
 </div>
 
 <div class="events-grid">
-    {% for event in events %}
+    {% for event in upcoming_events %}
         <div class="card event-card">
+            {% if event.image %}
+            <div class="event-card-media card-media-16x9">
+                <img src="{{ event.image.url }}" alt="" loading="lazy">
+            </div>
+            {% endif %}
+            <div class="event-card-body">
             <h3 class="event-title">{{ event.title }}</h3>
             <p class="event-host">
                 Hosted by: <a href="{% url 'university_detail' event.university.id %}">{{ event.university.name }}</a>
@@ -100,11 +133,41 @@
                     {{ event.location }}
                 </div>
             </div>
+            </div>
         </div>
     {% empty %}
         <div class="card" style="text-align: center; padding: 3rem;">
-            <p style="color: var(--text-muted); font-size: 1.1rem;">No upcoming events at this time.</p>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">No upcoming events yet. Check back soon.</p>
         </div>
     {% endfor %}
 </div>
+
+{% if past_events %}
+<div class="past-section">
+    <h3>Recently ended</h3>
+    <div class="events-grid">
+        {% for event in past_events %}
+        <div class="card event-card past">
+            {% if event.image %}
+            <div class="event-card-media card-media-16x9">
+                <img src="{{ event.image.url }}" alt="" loading="lazy">
+            </div>
+            {% endif %}
+            <div class="event-card-body">
+            <h3 class="event-title" style="font-size: 1.15rem;">{{ event.title }}</h3>
+            <p class="event-host">
+                <a href="{% url 'university_detail' event.university.id %}">{{ event.university.name }}</a>
+            </p>
+            <p class="event-desc" style="margin-bottom: 1rem;">{{ event.description|truncatewords:40 }}</p>
+            <div class="event-meta">
+                <div class="meta-item" style="font-size: 0.9rem;">
+                    {{ event.event_date|date:"M j, Y g:i A" }} · {{ event.location|truncatewords:6 }}
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}

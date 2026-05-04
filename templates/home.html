@@ -104,7 +104,23 @@
 
 
     .uni-card {
-        padding: 2rem;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .uni-card-media {
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
+    }
+    .uni-card-media img {
+        transition: transform 0.35s ease;
+    }
+    .uni-card:hover .uni-card-media img {
+        transform: scale(1.03);
+    }
+    .uni-card-inner {
+        padding: 1.75rem 2rem 2rem;
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
@@ -193,6 +209,99 @@
         border-radius: var(--radius);
         border: 1px dashed #cbd5e1;
         color: var(--text-muted);
+    }
+
+    .spotlight-strip {
+        background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+        border: 1px solid #fed7aa;
+        border-radius: var(--radius);
+        padding: 1.1rem 1.35rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 1.5rem;
+        justify-content: space-between;
+    }
+    .spotlight-strip h2 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .spotlight-deadlines {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem 1.25rem;
+        align-items: center;
+        flex: 1;
+    }
+    .spotlight-deadlines a.spotlight-item {
+        font-size: 0.9rem;
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.35rem 0;
+        border-bottom: 2px solid transparent;
+    }
+    .spotlight-deadlines a.spotlight-item:hover {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+    }
+    .spotlight-item .when {
+        color: var(--danger);
+        font-weight: 700;
+        font-size: 0.8rem;
+    }
+
+    .scholarship-spotlight {
+        background: linear-gradient(135deg, #faf5ff 0%, #fdf4ff 100%);
+        border: 1px solid #e9d5ff;
+        border-radius: var(--radius);
+        padding: 1.15rem 1.35rem;
+        margin-bottom: 1.5rem;
+    }
+    .scholarship-spotlight h2 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .sch-featured-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
+    }
+    .sch-feature-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+    .sch-feature-card a { text-decoration: none; color: inherit; display: block; }
+    .sch-feature-card h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        padding: 0.75rem 1rem 0.25rem;
+        color: var(--text-main);
+    }
+    .sch-feature-card .uni {
+        font-size: 0.8rem;
+        color: var(--primary);
+        font-weight: 600;
+        padding: 0 1rem 0.75rem;
+    }
+    .sch-feature-card .tag {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        padding: 0 1rem 1rem;
     }
 </style>
 {% endblock %}
@@ -286,8 +395,58 @@
 
 
     <div class="results-area">
+        {% if spotlight_has_deadlines %}
+        <div class="spotlight-strip" role="region" aria-label="Upcoming application deadlines">
+            <h2>
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Upcoming deadlines
+            </h2>
+            <div class="spotlight-deadlines">
+                {% for row in spotlight_deadlines %}
+                <a href="{% url 'university_detail' row.university_id %}" class="spotlight-item">
+                    {{ row.university.name }} — {{ row.degree_level|truncatewords:8 }}
+                    <span class="when">{% if row.days_left == 0 %}Today{% elif row.days_left == 1 %}1 day{% else %}{{ row.days_left }} days{% endif %}</span>
+                </a>
+                {% endfor %}
+            </div>
+            <a href="{% url 'admission:admissions_hub' %}#deadlines" class="btn btn-primary" style="font-size: 0.88rem; padding: 0.5rem 1rem;">Full admissions center</a>
+        </div>
+        {% endif %}
+
+        {% if spotlight_has_scholarships %}
+        <div class="scholarship-spotlight" role="region" aria-label="Featured scholarships">
+            <h2>
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Featured scholarships
+            </h2>
+            <div class="sch-featured-grid">
+                {% for s in featured_scholarships %}
+                <article class="sch-feature-card">
+                    <a href="{% url 'scholarships_list' %}">
+                        {% if s.image %}
+                        <div class="card-media-16x9" style="background:#f5f3ff;">
+                            <img src="{{ s.image.url }}" alt="" loading="lazy">
+                        </div>
+                        {% endif %}
+                        <h4>{{ s.title }}</h4>
+                        <div class="uni">{{ s.university.name }}</div>
+                        {% if s.tagline %}<div class="tag">{{ s.tagline|truncatewords:12 }}</div>{% endif %}
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+            <a href="{% url 'scholarships_list' %}" class="btn btn-outline" style="margin-top: 1rem; display: inline-flex;">Browse all scholarships</a>
+        </div>
+        {% endif %}
+
         {% for uni in universities %}
             <article class="card uni-card">
+                {% if uni.image %}
+                <a href="{% url 'university_detail' uni.id %}" class="uni-card-media card-media-16x9" title="View {{ uni.name }}">
+                    <img src="{{ uni.image.url }}" alt="{{ uni.name }}" loading="lazy">
+                </a>
+                {% endif %}
+                <div class="uni-card-inner">
                 <div class="uni-header">
                     <a href="{% url 'university_detail' uni.id %}" class="uni-title">{{ uni.name }}</a>
                     
@@ -344,6 +503,7 @@
                         </span>
                     </div>
                     {% endif %}
+                </div>
                 </div>
             </article>
         {% empty %}
