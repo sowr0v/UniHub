@@ -49,8 +49,10 @@ def home(request):
 
 def university_detail(request, uni_id):
     university = get_object_or_404(University, id=uni_id)
+    clubs = university.clubs.all()  # Get all clubs for this university
     context = {
-        'university': university
+        'university': university,
+        'clubs': clubs
     }
     return render(request, 'university_detail.html', context)
 
