@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholarships - Uni-Hub Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .navbar { background: linear-gradient(135deg, #c026d3 0%, #a21caf 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; padding: 8px 16px; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .btn { display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #c026d3 0%, #a21caf 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .table-card { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f9f9f9; font-weight: bold; font-size: 13px; }
+        .btn-edit { padding: 8px 14px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-size: 12px; }
+        .btn-delete { padding: 8px 14px; background: #f44336; color: white; text-decoration: none; border-radius: 5px; font-size: 12px; }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Scholarships</h1>
+        <a href="{% url 'custom_admin:dashboard' %}">← Dashboard</a>
+    </nav>
+    <div class="container">
+        {% if messages %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endif %}
+        <div class="actions">
+            <div><strong>Total:</strong> {{ total }}</div>
+            <a href="{% url 'custom_admin:add_scholarship' %}" class="btn">+ Add scholarship</a>
+        </div>
+        <div class="table-card">
+            {% if scholarships %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>University</th>
+                        <th>Deadline</th>
+                        <th>Active</th>
+                        <th>Featured</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in scholarships %}
+                    <tr>
+                        <td><strong>{{ s.title }}</strong></td>
+                        <td>{{ s.university.name }}</td>
+                        <td>{% if s.deadline %}{{ s.deadline }}{% else %}—{% endif %}</td>
+                        <td>{% if s.is_active %}Yes{% else %}No{% endif %}</td>
+                        <td>{% if s.is_featured %}Yes{% else %}No{% endif %}</td>
+                        <td>
+                            <a href="{% url 'custom_admin:edit_scholarship' s.pk %}" class="btn-edit">Edit</a>
+                            <a href="{% url 'custom_admin:delete_scholarship' s.pk %}" class="btn-delete">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div style="padding: 40px; text-align: center; color: #666;">No scholarships yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

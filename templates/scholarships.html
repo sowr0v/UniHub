@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Scholarships | Uni-Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-head { text-align: center; margin-bottom: 2rem; }
+    .page-head h1 { font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; }
+    .page-head p { color: var(--text-muted); max-width: 640px; margin: 0 auto 1rem; }
+    .search-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; max-width: 480px; margin: 0 auto; }
+    .search-row input[type="text"] { flex: 1; min-width: 200px; padding: 0.65rem 1rem; border: 1px solid var(--border); border-radius: 10px; }
+    .search-row button { padding: 0.65rem 1.25rem; background: linear-gradient(135deg, #c026d3, #a21caf); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+    .sch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 1.25rem; }
+    .sch-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .sch-card .body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .sch-card h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--text-main); }
+    .sch-card .uni { color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .sch-card .tag { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.75rem; }
+    .sch-card .desc { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; flex: 1; margin-bottom: 1rem; }
+    .sch-card .meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .sch-card .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .empty-sch { text-align: center; padding: 3rem; color: var(--text-muted); background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Scholarships &amp; financial aid</h1>
+    <p>Programs staff enable in the dashboard. Use search to filter by title, university, or keywords.</p>
+    <form class="search-row" method="get" action="{% url 'scholarships_list' %}">
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Search scholarships…">
+        <button type="submit">Search</button>
+        {% if search_query %}
+        <a href="{% url 'scholarships_list' %}" class="btn btn-outline" style="padding: 0.65rem 1rem;">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+{% if scholarships %}
+<div class="sch-grid">
+    {% for s in scholarships %}
+    <article class="sch-card">
+        {% if s.image %}
+        <div class="card-media-16x9" style="background:#faf5ff;">
+            <img src="{{ s.image.url }}" alt="" loading="lazy">
+        </div>
+        {% endif %}
+        <div class="body">
+            <h2>{{ s.title }}</h2>
+            <div class="uni"><a href="{% url 'university_detail' s.university_id %}">{{ s.university.name }}</a></div>
+            {% if s.tagline %}<p class="tag">{{ s.tagline }}</p>{% endif %}
+            <p class="desc">{{ s.description|truncatewords:42 }}</p>
+            {% if s.deadline %}
+            <p class="meta"><strong>Deadline:</strong> {{ s.deadline|date:"F j, Y" }}</p>
+            {% else %}
+            <p class="meta">Rolling / see details</p>
+            {% endif %}
+            <div class="actions">
+                {% if s.apply_link %}
+                <a href="{{ s.apply_link }}" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.9rem;">Apply / info</a>
+                {% endif %}
+                <a href="{% url 'university_detail' s.university_id %}" class="btn btn-outline" style="font-size:0.9rem;">University</a>
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-sch">
+    <p><strong>No scholarships match your search.</strong></p>
+    <p style="margin-top:0.5rem;">Staff can add programs from the dashboard under <em>Scholarships</em>.</p>
+</div>
+{% endif %}
+{% endblock %}
