@@ -1,0 +1,561 @@
+{% extends 'base.html' %}
+
+{% block title %}Admissions Center | Uni-Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hub-hero {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .hub-hero h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+        margin-bottom: 0.5rem;
+    }
+    .hub-hero p {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        max-width: 640px;
+        margin: 0 auto 1.25rem;
+        line-height: 1.55;
+    }
+    .hub-search {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+    .hub-search input[type="text"] {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.65rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95rem;
+    }
+    .hub-search button {
+        padding: 0.65rem 1.25rem;
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .hub-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+    .stat-tile {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.1rem 1rem;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+    }
+    .stat-tile strong {
+        display: block;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 0.2rem;
+    }
+    .stat-tile span {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+    .hub-section {
+        margin-bottom: 2.75rem;
+    }
+    .hub-section h2 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .hub-section .sub {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+    .table-wrap {
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .data-table thead {
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: white;
+    }
+    .data-table th {
+        padding: 0.9rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .data-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+    }
+    .data-table tbody tr:hover {
+        background: #f8fafc;
+    }
+    .uni-link {
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+    }
+    .uni-link:hover {
+        text-decoration: underline;
+    }
+    .badge-urgent {
+        display: inline-block;
+        padding: 0.2rem 0.55rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .badge-urgent.critical {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+    .badge-urgent.soon {
+        background: #fef3c7;
+        color: #b45309;
+    }
+    .badge-urgent.ok {
+        background: #ecfdf5;
+        color: #047857;
+    }
+    .actions-cell {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    .btn-sm {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.45rem 0.85rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    .btn-sm-primary {
+        background: var(--danger);
+        color: white;
+    }
+    .btn-sm-primary:hover {
+        background: #dc2626;
+        color: white;
+    }
+    .btn-sm-cal {
+        background: var(--surface);
+        color: var(--primary);
+        border: 1px solid var(--border);
+    }
+    .btn-sm-cal:hover {
+        border-color: var(--primary);
+        background: #eef2ff;
+    }
+    .countdown-timer {
+        font-family: ui-monospace, 'Courier New', monospace;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--danger);
+    }
+    .countdown-expired-msg {
+        color: var(--text-muted);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    .time-unit {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        background: #fee2e2;
+        padding: 0.35rem 0.5rem;
+        border-radius: 6px;
+        min-width: 48px;
+        margin-right: 0.35rem;
+    }
+    .time-value {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--danger);
+    }
+    .time-label {
+        font-size: 0.62rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+    .muted-note {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+    .timeline-table tbody tr:nth-child(1) {
+        background: linear-gradient(90deg, #eef2ff 0%, transparent 100%);
+    }
+    .timeline-table tbody tr:nth-child(-n+3) td:first-child {
+        font-weight: 800;
+        color: var(--primary);
+    }
+    .col-num {
+        width: 2.5rem;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-muted);
+        font-weight: 700;
+    }
+    .type-pill {
+        display: inline-block;
+        padding: 0.2rem 0.55rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+    .type-pill.deadline {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+    .type-pill.portal {
+        background: #e0e7ff;
+        color: #3730a3;
+    }
+    .section-note {
+        font-size: 0.8rem;
+        color: var(--primary);
+        font-weight: 600;
+        margin-left: 0.35rem;
+    }
+    .empty-hub {
+        text-align: center;
+        padding: 3rem 1.5rem;
+        background: var(--surface);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+        color: var(--text-muted);
+    }
+    @media (max-width: 768px) {
+        .table-wrap { overflow-x: auto; }
+        .data-table { min-width: 640px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hub-hero">
+    <h1>Admissions center</h1>
+    <p>Track when admission <strong>portals open</strong> and <strong>application deadlines</strong> for programs across universities — in one place.</p>
+    <form class="hub-search" method="get" action="{% url 'admission:admissions_hub' %}">
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Search by university name…" aria-label="Search universities">
+        <button type="submit">Search</button>
+        {% if search_query %}
+        <a href="{% url 'admission:admissions_hub' %}" class="btn btn-outline" style="padding: 0.65rem 1rem;">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="hub-stats">
+    <div class="stat-tile">
+        <strong>{{ stats.opening_count }}</strong>
+        <span>Portals not yet open</span>
+    </div>
+    <div class="stat-tile">
+        <strong>{{ stats.deadline_count }}</strong>
+        <span>Active application rounds</span>
+    </div>
+    <div class="stat-tile">
+        <strong>{{ stats.openings_next_7 }}</strong>
+        <span>Portal opens in 7 days</span>
+    </div>
+    <div class="stat-tile">
+        <strong>{{ stats.deadlines_week }}</strong>
+        <span>Deadlines within 7 days</span>
+    </div>
+    <div class="stat-tile">
+        <strong>{{ stats.deadlines_fortnight }}</strong>
+        <span>Deadlines within 14 days</span>
+    </div>
+</div>
+
+<!-- Chronological preview: soonest dates first -->
+{% if timeline_preview %}
+<section class="hub-section" id="timeline">
+    <h2>
+        <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        Coming up next
+        <span class="section-note">· soonest first</span>
+    </h2>
+    <p class="sub">Deadlines and portal opening times in one list, sorted by the nearest upcoming date.</p>
+    <div class="table-wrap">
+        <table class="data-table timeline-table">
+            <thead>
+                <tr>
+                    <th class="col-num">#</th>
+                    <th>When</th>
+                    <th>Type</th>
+                    <th>Details</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in timeline_preview %}
+                <tr>
+                    <td class="col-num">{{ forloop.counter }}</td>
+                    <td>
+                        {% if row.kind == 'deadline' %}
+                            {% with d=row.deadline %}
+                                <strong>{{ d.deadline|date:"M j, Y" }}</strong>
+                                {% if d.days_left == 0 %}
+                                <span class="badge-urgent critical">Today</span>
+                                {% else %}
+                                <span class="badge-urgent {{ d.urgency }}">{{ d.days_left }}d</span>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            {% with o=row.opening %}
+                                <strong>{{ o.opening_datetime|date:"M j, Y" }}</strong>
+                                <span class="muted-note" style="display:block;font-size:0.85rem;">{{ o.opening_datetime|date:"g:i A" }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row.kind == 'deadline' %}
+                            <span class="type-pill deadline">Deadline</span>
+                        {% else %}
+                            <span class="type-pill portal">Portal opens</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row.kind == 'deadline' %}
+                            {% with d=row.deadline %}
+                                <a href="{% url 'university_detail' d.university_id %}" class="uni-link">{{ d.university.name }}</a>
+                                <div class="muted-note">{{ d.degree_level }}</div>
+                            {% endwith %}
+                        {% else %}
+                            {% with o=row.opening %}
+                                <a href="{% url 'university_detail' o.university_id %}" class="uni-link">{{ o.university.name }}</a>
+                                <div class="muted-note">Admission portal goes live</div>
+                            {% endwith %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            {% if row.kind == 'deadline' %}
+                                {% with d=row.deadline %}
+                                    {% if d.apply_link %}
+                                    <a href="{{ d.apply_link }}" target="_blank" rel="noopener" class="btn-sm btn-sm-primary">Apply</a>
+                                    {% endif %}
+                                    <a href="{{ d.gcal_url }}" target="_blank" rel="noopener" class="btn-sm btn-sm-cal">Calendar</a>
+                                {% endwith %}
+                            {% else %}
+                                {% with o=row.opening %}
+                                    <a href="{{ o.info_link }}" target="_blank" rel="noopener" class="btn-sm btn-sm-cal">Details</a>
+                                    <a href="{% url 'university_detail' o.university_id %}" class="btn-sm btn-sm-cal">University</a>
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+<!-- Application deadlines (degree rounds from university profiles) -->
+<section class="hub-section" id="deadlines">
+    <h2>
+        <svg width="22" height="22" fill="none" stroke="var(--danger)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Application deadlines
+        <span class="section-note">· soonest first</span>
+    </h2>
+    <p class="sub">Programs with a fixed apply-by date — ordered from the closest deadline to the farthest.</p>
+
+    {% if deadlines %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th class="col-num">#</th>
+                    <th>Deadline</th>
+                    <th>Time left</th>
+                    <th>University</th>
+                    <th>Program</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in deadlines %}
+                <tr>
+                    <td class="col-num">{{ forloop.counter }}</td>
+                    <td><strong>{{ d.deadline|date:"M j, Y" }}</strong></td>
+                    <td>
+                        {% if d.days_left == 0 %}
+                        <span class="badge-urgent critical">Due today</span>
+                        {% else %}
+                        <span class="badge-urgent {{ d.urgency }}">{{ d.days_left }} day{{ d.days_left|pluralize }} left</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'university_detail' d.university_id %}" class="uni-link">{{ d.university.name }}</a></td>
+                    <td>{{ d.degree_level }}</td>
+                    <td>
+                        <div class="actions-cell">
+                            {% if d.apply_link %}
+                            <a href="{{ d.apply_link }}" target="_blank" rel="noopener" class="btn-sm btn-sm-primary">Apply</a>
+                            {% endif %}
+                            <a href="{{ d.gcal_url }}" target="_blank" rel="noopener" class="btn-sm btn-sm-cal">Calendar</a>
+                            <a href="{% url 'university_detail' d.university_id %}" class="btn-sm btn-sm-cal">Profile</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-hub">
+        <p><strong>No upcoming deadlines match your filters.</strong></p>
+        <p class="muted-note" style="margin-top: 0.5rem;">Deadlines are created from each university’s profile. Staff can add them from the dashboard.</p>
+    </div>
+    {% endif %}
+</section>
+
+<!-- Portal opening countdowns -->
+<section class="hub-section" id="portals">
+    <h2>
+        <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        Admission portal opens
+        <span class="section-note">· soonest first</span>
+    </h2>
+    <p class="sub">Countdown to when the online portal accepts applications — nearest opening time at the top.</p>
+
+    {% if openings_upcoming %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th class="col-num">#</th>
+                    <th>University</th>
+                    <th>Opens (local)</th>
+                    <th>Countdown</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admission in openings_upcoming %}
+                <tr>
+                    <td class="col-num">{{ forloop.counter }}</td>
+                    <td>
+                        <a href="{% url 'university_detail' admission.university_id %}" class="uni-link">{{ admission.university.name }}</a>
+                    </td>
+                    <td>{{ admission.opening_datetime|date:"M j, Y g:i A" }}</td>
+                    <td>
+                        <div class="countdown-timer" data-target="{{ admission.opening_datetime|date:'c' }}">
+                            <span class="countdown-display">…</span>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{{ admission.info_link }}" target="_blank" rel="noopener" class="btn-sm btn-sm-cal">Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="muted-note" style="margin-bottom: 1rem;">No upcoming portal openings{% if search_query %} matching “{{ search_query }}”{% endif %}.</p>
+    {% endif %}
+
+    {% if openings_past %}
+    <h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem; color: var(--text-muted);">Recently opened</h3>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>University</th>
+                    <th>Opened</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admission in openings_past %}
+                <tr>
+                    <td>
+                        <a href="{% url 'university_detail' admission.university_id %}" class="uni-link">{{ admission.university.name }}</a>
+                    </td>
+                    <td>{{ admission.opening_datetime|date:"M j, Y g:i A" }}</td>
+                    <td><span class="countdown-expired-msg">Portal live</span> · <a href="{{ admission.info_link }}" target="_blank" rel="noopener" class="uni-link">Link</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if not openings_upcoming and not openings_past %}
+    <div class="empty-hub">
+        <p>No admission portal schedules yet.</p>
+    </div>
+    {% endif %}
+</section>
+
+<script>
+(function () {
+    function updateCountdowns() {
+        var timers = document.querySelectorAll('.countdown-timer');
+        var now = new Date().getTime();
+        timers.forEach(function (timer) {
+            var target = new Date(timer.dataset.target).getTime();
+            var distance = target - now;
+            var display = timer.querySelector('.countdown-display');
+            if (!display) return;
+            if (distance < 0) {
+                display.innerHTML = '<span class="countdown-expired-msg">Open now</span>';
+                return;
+            }
+            var days = Math.floor(distance / (86400000));
+            var hours = Math.floor((distance % 86400000) / 3600000);
+            var minutes = Math.floor((distance % 3600000) / 60000);
+            var seconds = Math.floor((distance % 60000) / 1000);
+            display.innerHTML =
+                '<span class="time-unit"><span class="time-value">' + days + '</span><span class="time-label">Days</span></span>' +
+                '<span class="time-unit"><span class="time-value">' + String(hours).padStart(2, '0') + '</span><span class="time-label">Hr</span></span>' +
+                '<span class="time-unit"><span class="time-value">' + String(minutes).padStart(2, '0') + '</span><span class="time-label">Min</span></span>' +
+                '<span class="time-unit"><span class="time-value">' + String(seconds).padStart(2, '0') + '</span><span class="time-label">Sec</span></span>';
+        });
+    }
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
+})();
+</script>
+{% endblock %}
