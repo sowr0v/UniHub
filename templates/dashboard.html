@@ -151,7 +151,7 @@
             padding: 40px;
             text-align: center;
             color: #666;
-
+        }
     </style>
 </head>
 <body>
@@ -185,7 +185,6 @@
                 <h3>{{ total_universities }}</h3>
                 <p>Total Universities</p>
             </div>
-        </div>
 
    <a href="{% url 'custom_admin:manage_users' %}" style="text-decoration: none; color: inherit;">
     <div class="stat-card">
@@ -193,7 +192,14 @@
         <p>Manage Registered Users</p>
     </div>
 </a>
-</div>
+
+   <a href="{% url 'custom_admin:manage_admissions' %}" style="text-decoration: none; color: inherit;">
+    <div class="stat-card">
+        <h3 style="color: #f59e0b;">Admissions</h3>
+        <p>Manage Admission Openings</p>
+    </div>
+</a>
+        </div>
 
         <div class="actions" style="display: flex; gap: 10px;">
             <a href="{% url 'custom_admin:add_university' %}" class="btn">+ Add New University</a>
