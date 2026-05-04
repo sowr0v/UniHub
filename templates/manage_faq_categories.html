@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FAQ sections - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
+        .navbar { background: linear-gradient(135deg, #64748b 0%, #475569 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; }
+        .navbar a { color: white; text-decoration: none; }
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        .btn { display: inline-block; padding: 10px 20px; background: #475569; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; margin-bottom: 20px; }
+        table { width: 100%; background: white; border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9f9f9; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; text-decoration: none; color: white; }
+        .e { background: #4CAF50; } .d { background: #f44336; }
+    </style>
+</head>
+<body>
+    <nav class="navbar"><strong>FAQ sections</strong><a href="{% url 'custom_admin:dashboard' %}">Dashboard</a></nav>
+    <div class="container">
+        <a href="{% url 'custom_admin:add_faq_category' %}" class="btn">+ Add section</a>
+        <a href="{% url 'custom_admin:manage_faq' %}" class="btn" style="background:#2563eb;">View all questions</a>
+        {% if categories %}
+        <table>
+            <thead><tr><th>Name</th><th>Slug</th><th>Order</th><th></th></tr></thead>
+            <tbody>
+                {% for c in categories %}
+                <tr>
+                    <td><strong>{{ c.name }}</strong></td>
+                    <td>{{ c.slug }}</td>
+                    <td>{{ c.sort_order }}</td>
+                    <td>
+                        <a href="{% url 'custom_admin:edit_faq_category' c.pk %}" class="btn-sm e">Edit</a>
+                        <a href="{% url 'custom_admin:delete_faq_category' c.pk %}" class="btn-sm d">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#666;">No sections yet. Add one before creating FAQ entries.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

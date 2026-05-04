@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ form_title }} - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
+        .navbar { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; }
+        .navbar a { color: white; text-decoration: none; }
+        .container { max-width: 720px; margin: 28px auto; padding: 0 20px; }
+        .card { background: white; padding: 28px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 18px; }
+        .form-group > label { display: block; font-weight: bold; margin-bottom: 6px; }
+        input:not([type="checkbox"]), select, textarea { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+        textarea { min-height: 160px; resize: vertical; }
+        .chk { display: flex; align-items: center; gap: 10px; }
+        .chk input { width: auto; }
+        .btn { padding: 10px 22px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 8px; }
+        .btn-p { background: #2563eb; color: white; }
+        .btn-s { background: #e5e5e5; color: #333; text-decoration: none; display: inline-block; }
+        .alert { background: #fee2e2; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar"><strong>{{ form_title }}</strong><a href="{% url 'custom_admin:manage_faq' %}">← FAQ list</a></nav>
+    <div class="container">
+        <div class="card">
+            {% if form.errors %}<div class="alert">Please fix the errors below.</div>{% endif %}
+            <form method="post">{% csrf_token %}
+                {% for field in form %}
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="form-group chk">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                    {% else %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                        {{ field }}
+                        {% if field.errors %}<small style="color:#c33;">{{ field.errors.0 }}</small>{% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="btn btn-p">{{ submit_label }}</button>
+                <a href="{% url 'custom_admin:manage_faq' %}" class="btn btn-s">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
