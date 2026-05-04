@@ -201,8 +201,9 @@
 </a>
         </div>
 
-        <div class="actions" style="display: flex; gap: 10px;">
+        <div class="actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
             <a href="{% url 'custom_admin:add_university' %}" class="btn">+ Add New University</a>
+            <a href="{% url 'custom_admin:manage_clubs' %}" class="btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);">+ Manage Clubs</a>
             <a href="{% url 'custom_admin:upload_csv' %}" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                 Bulk Upload (CSV)
