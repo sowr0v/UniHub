@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('universities.urls')),
     path('dashboard/', include('custom_admin.urls')),
     path('auth/', include('authentication.urls')),
+    path('admission/', include('admission.urls')),
 ]
 
 # Serve media files in development
