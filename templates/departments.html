@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Departments — {{ university.name }} - Uni-Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-hero {
+        margin-bottom: 1.5rem;
+    }
+    .page-hero h1 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 0.35rem;
+    }
+    .page-hero p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+    .dept-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+    .dept-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    .dept-card:hover {
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary);
+    }
+    .dept-card-media {
+        background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+    }
+    .dept-card-body {
+        padding: 1.25rem 1.35rem;
+    }
+    .dept-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 0.65rem;
+    }
+    .dept-card .dept-desc {
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.55;
+        white-space: pre-line;
+    }
+    .empty-state {
+        background: var(--surface);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'university_detail' university.id %}" class="btn btn-outline" style="margin-bottom: 1.25rem;">&larr; Back to {{ university.name }}</a>
+
+<div class="page-hero">
+    <h1>Departments</h1>
+    <p>Academic departments and units at {{ university.name }}.</p>
+</div>
+
+{% if departments %}
+<div class="dept-grid">
+    {% for dept in departments %}
+    <article class="dept-card">
+        {% if dept.image %}
+        <div class="dept-card-media card-media-16x9">
+            <img src="{{ dept.image.url }}" alt="" loading="lazy">
+        </div>
+        {% endif %}
+        <div class="dept-card-body">
+        <h3>{{ dept.name }}</h3>
+        {% if dept.description %}
+            <div class="dept-desc">{{ dept.description }}</div>
+        {% else %}
+            <p class="dept-desc" style="font-style: italic;">No description provided.</p>
+        {% endif %}
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p><strong>No departments have been listed yet.</strong></p>
+    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Check back later, or refer to the university profile for the reported total number of departments.</p>
+</div>
+{% endif %}
+{% endblock %}
