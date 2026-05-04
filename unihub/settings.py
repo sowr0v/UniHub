@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'custom_admin',
     'authentication',
     'admission',
+    'clubs',
 ]
 
 MIDDLEWARE = [
