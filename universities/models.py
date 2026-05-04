@@ -34,6 +34,35 @@ class University(models.Model):
         ordering = ['name']
 
 
+class Department(models.Model):
+    university = models.ForeignKey(
+        University,
+        on_delete=models.CASCADE,
+        related_name='departments',
+    )
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    image = models.ImageField(
+        upload_to='departments/',
+        blank=True,
+        null=True,
+        help_text='Optional image for this department',
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.university.name})"
+
+    class Meta:
+        verbose_name_plural = "Departments"
+        ordering = ['name']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['university', 'name'],
+                name='unique_department_name_per_university',
+            ),
+        ]
+
+
 class Event(models.Model):
     # Links this event to a specific university
     university = models.ForeignKey(University, on_delete=models.CASCADE, related_name='events')
@@ -41,6 +70,12 @@ class Event(models.Model):
     description = models.TextField()
     event_date = models.DateTimeField()
     location = models.CharField(max_length=200, help_text="e.g., Main Auditorium or Zoom Link")
+    image = models.ImageField(
+        upload_to='events/',
+        blank=True,
+        null=True,
+        help_text='Optional banner or poster image',
+    )
 
     def __str__(self):
         return f"{self.title} - {self.university.name}"
@@ -62,3 +97,89 @@ class Admission(models.Model):
 
     class Meta:
         ordering = ['deadline']  # Shows the most urgent deadlines first
+
+
+class Scholarship(models.Model):
+    """Merit or need-based aid programs managed from the staff dashboard."""
+
+    university = models.ForeignKey(
+        University,
+        on_delete=models.CASCADE,
+        related_name='scholarships',
+    )
+    title = models.CharField(max_length=200)
+    tagline = models.CharField(
+        max_length=300,
+        blank=True,
+        help_text='Short highlight (e.g. "Up to 100% tuition")',
+    )
+    description = models.TextField()
+    deadline = models.DateField(null=True, blank=True, help_text='Optional application deadline')
+    apply_link = models.URLField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(
+        default=False,
+        help_text='Show in the home page “Featured scholarships” strip',
+    )
+    image = models.ImageField(
+        upload_to='scholarships/',
+        blank=True,
+        null=True,
+    )
+    sort_order = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.title} — {self.university.name}"
+
+    class Meta:
+        ordering = ['sort_order', 'title']
+        verbose_name_plural = 'Scholarships'
+
+
+class FaqCategory(models.Model):
+    """Groups FAQ entries (e.g. Admissions, Fees)."""
+
+    name = models.CharField(max_length=120)
+    slug = models.SlugField(unique=True, blank=True)
+    sort_order = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'FAQ categories'
+        ordering = ['sort_order', 'name']
+
+    def save(self, *args, **kwargs):
+        from django.utils.text import slugify
+
+        if not self.slug:
+            base = slugify(self.name)[:80] or 'category'
+            slug = base
+            n = 1
+            while FaqCategory.objects.exclude(pk=self.pk).filter(slug=slug).exists():
+                slug = f'{base}-{n}'
+                n += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+
+class FaqItem(models.Model):
+    """Published Q&A for the public Help & FAQ page."""
+
+    category = models.ForeignKey(
+        FaqCategory,
+        on_delete=models.CASCADE,
+        related_name='items',
+    )
+    question = models.CharField(max_length=400)
+    answer = models.TextField()
+    sort_order = models.PositiveSmallIntegerField(default=0)
+    is_published = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.question[:60]
+
+    class Meta:
+        ordering = ['category', 'sort_order', 'pk']
+        verbose_name_plural = 'FAQ items'
