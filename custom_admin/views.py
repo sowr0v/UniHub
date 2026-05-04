@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 import csv
 import io
+from admission.models import AdmissionOpening
+from admission.forms import AdmissionOpeningForm
 
 def is_staff_user(user):
     return user.is_staff or user.is_superuser
@@ -166,3 +168,67 @@ def upload_universities_csv(request):
             return redirect('custom_admin:upload_csv')
             
     return render(request, 'upload_csv.html')
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def manage_admissions(request):
+    admissions = AdmissionOpening.objects.all().order_by('opening_datetime')
+    context = {
+        'admissions': admissions,
+        'total_admissions': admissions.count(),
+    }
+    return render(request, 'manage_admissions.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def add_admission(request):
+    if request.method == 'POST':
+        form = AdmissionOpeningForm(request.POST)
+        if form.is_valid():
+            admission = form.save()
+            messages.success(request, f'Admission opening for "{admission.university.name}" added successfully!')
+            return redirect('custom_admin:manage_admissions')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = AdmissionOpeningForm()
+    
+    context = {'form': form}
+    return render(request, 'add_admission.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def edit_admission(request, pk):
+    admission = get_object_or_404(AdmissionOpening, pk=pk)
+    
+    if request.method == 'POST':
+        form = AdmissionOpeningForm(request.POST, instance=admission)
+        if form.is_valid():
+            admission = form.save()
+            messages.success(request, f'Admission opening for "{admission.university.name}" updated successfully!')
+            return redirect('custom_admin:manage_admissions')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = AdmissionOpeningForm(instance=admission)
+    
+    context = {
+        'form': form,
+        'admission': admission
+    }
+    return render(request, 'edit_admission.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def delete_admission(request, pk):
+    admission = get_object_or_404(AdmissionOpening, pk=pk)
+    
+    if request.method == 'POST':
+        university_name = admission.university.name
+        admission.delete()
+        messages.success(request, f'Admission opening for "{university_name}" deleted successfully!')
+        return redirect('custom_admin:manage_admissions')
+    
+    context = {'admission': admission}
+    return render(request, 'delete_admission.html', context)

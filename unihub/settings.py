@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'universities',
     'custom_admin',
     'authentication',
+    'admission',
 ]
 
 MIDDLEWARE = [
