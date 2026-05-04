@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import University, Event
 
 def home(request):
-    universities = University.objects.all()
+    universities = University.objects.prefetch_related('clubs').all()
 
     location_query = request.GET.get('location')
     if location_query:

@@ -331,8 +331,19 @@
 
                     <div class="detail-item">
                         <span class="detail-label">Language</span>
-                        <span class="detail-value">English</span>
+                        <span class="detail-value">{{ uni.language|default:"N/A" }}</span>
                     </div>
+                    {% if uni.clubs.all %}
+                    <div class="detail-item">
+                        <span class="detail-label">Clubs</span>
+                        <span class="detail-value">
+                            {% for club in uni.clubs.all|slice:":2" %}
+                                {{ club.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            {% if uni.clubs.count > 2 %}+{{ uni.clubs.count|add:"-2" }} more{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
                 </div>
             </article>
         {% empty %}

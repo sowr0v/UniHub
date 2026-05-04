@@ -9,6 +9,8 @@ import csv
 import io
 from admission.models import AdmissionOpening
 from admission.forms import AdmissionOpeningForm
+from clubs.models import Club
+from clubs.forms import ClubForm
 
 def is_staff_user(user):
     return user.is_staff or user.is_superuser
@@ -179,6 +181,72 @@ def manage_admissions(request):
         'total_admissions': admissions.count(),
     }
     return render(request, 'manage_admissions.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def manage_clubs(request):
+    clubs = Club.objects.select_related('university').all()
+    context = {
+        'clubs': clubs,
+        'total_clubs': clubs.count(),
+    }
+    return render(request, 'manage_clubs.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def add_club(request):
+    if request.method == 'POST':
+        form = ClubForm(request.POST)
+        if form.is_valid():
+            club = form.save()
+            messages.success(request, f'Club "{club.name}" added successfully!')
+            return redirect('custom_admin:manage_clubs')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ClubForm()
+    
+    context = {
+        'form': form,
+        'form_title': 'Add Club',
+        'submit_label': 'Add Club',
+    }
+    return render(request, 'club_form.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def edit_club(request, pk):
+    club = get_object_or_404(Club, pk=pk)
+    if request.method == 'POST':
+        form = ClubForm(request.POST, instance=club)
+        if form.is_valid():
+            club = form.save()
+            messages.success(request, f'Club "{club.name}" updated successfully!')
+            return redirect('custom_admin:manage_clubs')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ClubForm(instance=club)
+    
+    context = {
+        'form': form,
+        'form_title': 'Edit Club',
+        'submit_label': 'Update Club',
+    }
+    return render(request, 'club_form.html', context)
+
+@login_required
+@user_passes_test(is_staff_user)
+def delete_club(request, pk):
+    club = get_object_or_404(Club, pk=pk)
+    if request.method == 'POST':
+        name = club.name
+        club.delete()
+        messages.success(request, f'Club "{name}" deleted successfully!')
+        return redirect('custom_admin:manage_clubs')
+    
+    context = {'club': club}
+    return render(request, 'delete_club.html', context)
 
 @login_required
 @user_passes_test(is_staff_user)
