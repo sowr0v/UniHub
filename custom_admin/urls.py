@@ -11,4 +11,8 @@ urlpatterns = [
     path('users/', views.manage_users, name='manage_users'),
     path('users/delete/<int:user_id>/', views.delete_student, name='delete_student'),
     path('upload-csv/', views.upload_universities_csv, name='upload_csv'),
+    path('admissions/', views.manage_admissions, name='manage_admissions'),
+    path('admissions/add/', views.add_admission, name='add_admission'),
+    path('admissions/edit/<int:pk>/', views.edit_admission, name='edit_admission'),
+    path('admissions/delete/<int:pk>/', views.delete_admission, name='delete_admission'),
 ]
