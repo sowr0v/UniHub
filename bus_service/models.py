@@ -2,7 +2,11 @@ from django.db import models
 from universities.models import University
 
 class BusService(models.Model):
-    university = models.OneToOneField(University, on_delete=models.CASCADE)
+    university = models.OneToOneField(
+        University, 
+        on_delete=models.CASCADE,
+        related_name='busservice'
+    )
     has_bus_service = models.BooleanField(default=False)
 
     def __str__(self):

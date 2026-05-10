@@ -1,16 +1,35 @@
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.http import JsonResponse
+from django.db import connection
 
 from .models import University, Event, Admission, Scholarship, FaqCategory, FaqItem
 
+def health_check(request):
+    """Simple health check endpoint for deployment verification"""
+    try:
+        # Test database connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        
+        return JsonResponse({
+            'status': 'healthy',
+            'database': 'connected',
+            'debug': request.GET.get('debug') == 'true'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'unhealthy',
+            'error': str(e)
+        }, status=500)
+
 def home(request):
-    universities = University.objects.prefetch_related(
-        'clubs',
+    universities = University.objects.select_related(
         'busservice',
         'hostelservice',
         'playgroundservice'
-    ).all()
+    ).prefetch_related('clubs').all()
 
     location_query = request.GET.get('location')
     if location_query:
