@@ -9,6 +9,7 @@ urlpatterns = [
     path('dashboard/', include('custom_admin.urls')),
     path('auth/', include('authentication.urls')),
     path('admission/', include('admission.urls')),
+    path('bus_service/', include('bus_service.urls')),  # add bus_service URLs
 ]
 
 # Serve media files in development

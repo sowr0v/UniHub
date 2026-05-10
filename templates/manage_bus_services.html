@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Manage Bus Services</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>University</th>
+            <th>Has Bus Service</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bus_service in bus_services %}
+        <tr>
+            <td>{{ bus_service.university.name }}</td>
+            <td>{{ bus_service.has_bus_service|yesno:"Yes,No" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'add_bus_service' %}" class="btn btn-success">Add/Update Bus Service</a>
+{% endblock %}
