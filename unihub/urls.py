@@ -10,6 +10,7 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('admission/', include('admission.urls')),
     path('bus_service/', include('bus_service.urls')),  # add bus_service URLs
+    path('hostel_service/', include('hostel_service.urls')),  # add hostel_service URLs
 ]
 
 # Serve media files in development

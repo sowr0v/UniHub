@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Manage Hostel Services</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>University</th>
+            <th>Has Hostel Service</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for hostel_service in hostel_services %}
+        <tr>
+            <td>{{ hostel_service.university.name }}</td>
+            <td>{{ hostel_service.has_hostel_service|yesno:"Yes,No" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'add_hostel_service' %}" class="btn btn-success">Add/Update Hostel Service</a>
+{% endblock %}

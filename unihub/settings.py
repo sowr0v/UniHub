@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'admission',
     'clubs',
     'bus_service',  # newly added app
+    'hostel_service',  # newly added app
 ]
 
 MIDDLEWARE = [
