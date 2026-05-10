@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Manage Playground Services</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>University</th>
+            <th>Has Playground Service</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for playground_service in playground_services %}
+        <tr>
+            <td>{{ playground_service.university.name }}</td>
+            <td>{{ playground_service.has_playground_service|yesno:"Yes,No" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'add_playground_service' %}" class="btn btn-success">Add/Update Playground Service</a>
+{% endblock %}
