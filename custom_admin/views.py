@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q, Count
 import csv
 import io
+import re
 from admission.models import AdmissionOpening
 from admission.forms import AdmissionOpeningForm
 from clubs.models import Club
@@ -141,28 +142,54 @@ def upload_universities_csv(request):
             return redirect('custom_admin:upload_csv')
             
         try:
-            # Read and decode CSV
-            data_set = csv_file.read().decode('UTF-8')
+            # Read and decode CSV, ignore bad chars
+            data_set = csv_file.read().decode('UTF-8', errors='ignore')
             io_string = io.StringIO(data_set)
             
-            # Skip header
-            next(io_string)
+            # Check if there is a header row
+            first_line = io_string.readline()
+            if 'Name' in first_line or 'Address' in first_line:
+                pass # Already skipped
+            else:
+                io_string.seek(0) # Reset pointer since it's not a header
             
             count = 0
             for row in csv.reader(io_string, delimiter=',', quotechar='"'):
-                # Expected: Name, Address, Contact, Total Departments, Faculty, QS Ranking, Publications, Cost, Admission Requirements, Website, Short Name, Credit System
+                if not row:
+                    continue
+                # Fix heavily quoted single-string exports
+                if len(row) == 1 and ',' in row[0]:
+                    try:
+                        row = next(csv.reader(io.StringIO(row[0])))
+                    except StopIteration:
+                        pass
+                        
                 if len(row) < 3:
                     continue
                     
+                # Robust extraction functions
+                def get_int(val, default=0):
+                    match = re.search(r'\d+', str(val).replace(',', ''))
+                    return int(match.group()) if match else default
+                    
+                def get_dec(val, default="0.00"):
+                    match = re.search(r'\d+(\.\d+)?', str(val).replace(',', ''))
+                    return match.group() if match else default
+
+                qs_ranking_raw = row[5].strip() if len(row) > 5 else ""
+                qs_ranking = get_int(qs_ranking_raw, default=None) if qs_ranking_raw else None
+                
+                publications = get_int(row[6], default=0) if len(row) > 6 else 0
+                
                 University.objects.create(
                     name=row[0].strip(),
                     address=row[1].strip() if len(row) > 1 else "",
                     contact=row[2].strip() if len(row) > 2 else "",
-                    total_departments=int(row[3].strip() or 0) if len(row) > 3 else 0,
-                    faculty=int(row[4].strip() or 0) if len(row) > 4 else 0,
-                    qs_ranking=int(row[5].strip()) if len(row) > 5 and row[5].strip() else None,
-                    publications=int(row[6].strip() or 0) if len(row) > 6 else 0,
-                    cost=row[7].strip() or "0.00" if len(row) > 7 else "0.00",
+                    total_departments=get_int(row[3]) if len(row) > 3 else 0,
+                    faculty=get_int(row[4]) if len(row) > 4 else 0,
+                    qs_ranking=qs_ranking,
+                    publications=publications,
+                    cost=get_dec(row[7]) if len(row) > 7 else "0.00",
                     admission_requirements=row[8].strip() if len(row) > 8 else "",
                     website=row[9].strip() if len(row) > 9 else "",
                     short_name=row[10].strip() if len(row) > 10 else "",
