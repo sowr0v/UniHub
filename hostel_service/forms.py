@@ -7,5 +7,5 @@ class HostelServiceForm(forms.ModelForm):
         fields = ['university', 'has_hostel_service']
         widgets = {
             'has_hostel_service': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
-            'has_hostel_service': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
+
         }
