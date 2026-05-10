@@ -25,71 +25,87 @@ def health_check(request):
         }, status=500)
 
 def home(request):
-    universities = University.objects.select_related(
-        'busservice',
-        'hostelservice',
-        'playgroundservice'
-    ).prefetch_related('clubs').all()
+    try:
+        universities = University.objects.select_related(
+            'busservice',
+            'hostelservice',
+            'playgroundservice'
+        ).prefetch_related('clubs').all()
 
-    location_query = request.GET.get('location')
-    if location_query:
-        universities = universities.filter(address__icontains=location_query)
+        location_query = request.GET.get('location')
+        if location_query:
+            universities = universities.filter(address__icontains=location_query)
 
-    max_fee = request.GET.get('max_fee')
-    if max_fee:
-        universities = universities.filter(cost__lte=max_fee)
+        max_fee = request.GET.get('max_fee')
+        if max_fee:
+            universities = universities.filter(cost__lte=max_fee)
 
-    course_type = request.GET.get('course_type')
-    if course_type:
-        universities = universities.filter(course_type__icontains=course_type)
+        course_type = request.GET.get('course_type')
+        if course_type:
+            universities = universities.filter(course_type__icontains=course_type)
 
-    subject_group = request.GET.get('subject_group')
-    if subject_group:
-        universities = universities.filter(subject_group__icontains=subject_group)
+        subject_group = request.GET.get('subject_group')
+        if subject_group:
+            universities = universities.filter(subject_group__icontains=subject_group)
 
-    language = request.GET.get('language')
-    if language:
-        universities = universities.filter(language__icontains=language)
+        language = request.GET.get('language')
+        if language:
+            universities = universities.filter(language__icontains=language)
 
-    institution_type = request.GET.get('institution_type')
-    if institution_type:
-        universities = universities.filter(institution_type__icontains=institution_type)
+        institution_type = request.GET.get('institution_type')
+        if institution_type:
+            universities = universities.filter(institution_type__icontains=institution_type)
 
-    credit_system = request.GET.get('credit_system')
-    if credit_system:
-        universities = universities.filter(credit_system=credit_system)
+        credit_system = request.GET.get('credit_system')
+        if credit_system:
+            universities = universities.filter(credit_system=credit_system)
 
-    sort_by = request.GET.get('sort')
-    if sort_by == 'ranking':
-        universities = universities.order_by('qs_ranking')
-    elif sort_by == 'fee_low':
-        universities = universities.order_by('cost')
-    elif sort_by == 'fee_high':
-        universities = universities.order_by('-cost')
+        sort_by = request.GET.get('sort')
+        if sort_by == 'ranking':
+            universities = universities.order_by('qs_ranking')
+        elif sort_by == 'fee_low':
+            universities = universities.order_by('cost')
+        elif sort_by == 'fee_high':
+            universities = universities.order_by('-cost')
 
-    today = timezone.localdate()
-    spotlight_deadlines = (
-        Admission.objects.filter(is_open=True, deadline__gte=today)
-        .select_related('university')
-        .order_by('deadline')[:5]
-    )
-    for row in spotlight_deadlines:
-        row.days_left = (row.deadline - today).days
+        today = timezone.localdate()
+        spotlight_deadlines = (
+            Admission.objects.filter(is_open=True, deadline__gte=today)
+            .select_related('university')
+            .order_by('deadline')[:5]
+        )
+        for row in spotlight_deadlines:
+            row.days_left = (row.deadline - today).days
 
-    featured_scholarships = list(
-        Scholarship.objects.filter(is_active=True, is_featured=True)
-        .select_related('university')
-        .order_by('sort_order', 'title')[:6]
-    )
+        featured_scholarships = list(
+            Scholarship.objects.filter(is_active=True, is_featured=True)
+            .select_related('university')
+            .order_by('sort_order', 'title')[:6]
+        )
 
-    context = {
-        'universities': universities,
-        'spotlight_deadlines': spotlight_deadlines,
-        'spotlight_has_deadlines': bool(spotlight_deadlines),
-        'featured_scholarships': featured_scholarships,
-        'spotlight_has_scholarships': bool(featured_scholarships),
-    }
-    return render(request, 'home.html', context)
+        context = {
+            'universities': universities,
+            'spotlight_deadlines': spotlight_deadlines,
+            'spotlight_has_deadlines': bool(spotlight_deadlines),
+            'featured_scholarships': featured_scholarships,
+            'spotlight_has_scholarships': bool(featured_scholarships),
+        }
+        return render(request, 'home.html', context)
+    except Exception as e:
+        # If database tables don't exist yet, show a friendly message
+        from django.http import HttpResponse
+        return HttpResponse(f"""
+            <html>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1>Database Not Ready</h1>
+                <p>The database tables haven't been created yet.</p>
+                <p>Error: {str(e)}</p>
+                <p>Please ensure migrations have been run: <code>python manage.py migrate</code></p>
+                <hr>
+                <p><a href="/health/">Check Health Status</a></p>
+            </body>
+            </html>
+        """, status=503)
 
 def university_detail(request, uni_id):
     university = get_object_or_404(

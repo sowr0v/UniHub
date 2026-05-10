@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: unihub
+    runtime: python
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input --clear"
+    startCommand: "python manage.py migrate --no-input && gunicorn unihub.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
