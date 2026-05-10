@@ -5,7 +5,12 @@ from django.utils import timezone
 from .models import University, Event, Admission, Scholarship, FaqCategory, FaqItem
 
 def home(request):
-    universities = University.objects.prefetch_related('clubs').all()
+    universities = University.objects.prefetch_related(
+        'clubs',
+        'busservice',
+        'hostelservice',
+        'playgroundservice'
+    ).all()
 
     location_query = request.GET.get('location')
     if location_query:
