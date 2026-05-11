@@ -13,9 +13,19 @@ def health_check(request):
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
         
+        # Check Cloudinary configuration
+        import os
+        cloudinary_configured = bool(
+            os.environ.get('CLOUDINARY_CLOUD_NAME') and
+            os.environ.get('CLOUDINARY_API_KEY') and
+            os.environ.get('CLOUDINARY_API_SECRET')
+        )
+        
         return JsonResponse({
             'status': 'healthy',
             'database': 'connected',
+            'cloudinary': 'configured' if cloudinary_configured else 'not configured',
+            'cloudinary_cloud_name': os.environ.get('CLOUDINARY_CLOUD_NAME', 'NOT SET'),
             'debug': request.GET.get('debug') == 'true'
         })
     except Exception as e:
